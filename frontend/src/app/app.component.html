@@ -1,12 +1,18 @@
-<main>
+<body>
 
-  <app-sidebar></app-sidebar>
-  <div class="container mt-5">
-    <div class="card">
-      <div class="card-body">
-        Where would I sit?
-      </div>
-    </div>
+<app-navbar></app-navbar>
+
+<div class="container-fluid">
+
+
+  <div class="row">
+
+    <app-sidebar></app-sidebar>
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <router-outlet></router-outlet>
+    </main>
   </div>
+</div>
 
-</main>
+</body>
