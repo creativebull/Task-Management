@@ -10,7 +10,6 @@ import {ProfileSidebarComponent} from './components/settings/profile-sidebar/pro
 import {SettingsComponent} from './components/settings/settings.component';
 import {UserSettingsComponent} from '../settings/components/user-settings/user-settings.component';
 import {DataTablesModule} from 'angular-datatables';
-import { AccountSettingsComponent } from '../settings/components/account-settings/account-settings.component';
 import {SweetAlert2Module} from '@sweetalert2/ngx-sweetalert2';
 import {SharedModule} from '../shared/shared.module';
 import { RegisterComponent } from './components/register/register.component';
@@ -32,7 +31,6 @@ import { RegisterComponent } from './components/register/register.component';
     ForgotPasswordConfirmComponent,
     ProfileSidebarComponent,
     UserSettingsComponent,
-    AccountSettingsComponent,
     RegisterComponent
   ]
 })
