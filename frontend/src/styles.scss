@@ -39,13 +39,13 @@
 body {
   min-height: 100vh;
   min-height: -moz-available;
-  min-height: -webkit-fill-available;
-  min-height: fill-available;
+  min-height: -webkit-stretch;
+  min-height: stretch;
 }
 
 html {
   height: 100vh;
-  height: -webkit-fill-available;
+  height: -webkit-strech;
 }
 
 .btn-toggle {
