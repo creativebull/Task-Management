@@ -159,7 +159,7 @@ export class AuthService {
 
   fetchUserDetails() {
 
-    this.http.get<any>(this.apiUrl + 'users/details').subscribe({
+    this.http.get<any>(this.apiUrl + 'user/details').subscribe({
       next: (res) => {
         this.pushLoggedInUser(res.data);
       }

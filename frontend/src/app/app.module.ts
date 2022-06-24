@@ -13,6 +13,7 @@ import {XdebugInterceptor} from './interceptors/xdebug.interceptor';
 import {AuthGuard} from './guards/auth.guard';
 import {ToastrModule} from 'ngx-toastr';
 import {SweetAlert2Module} from '@sweetalert2/ngx-sweetalert2';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import {SweetAlert2Module} from '@sweetalert2/ngx-sweetalert2';
   imports: [
     BrowserModule,
     HttpClientModule,
+    BrowserAnimationsModule,
     ToastrModule.forRoot(),
     SweetAlert2Module.forRoot(),
     UserModule,
