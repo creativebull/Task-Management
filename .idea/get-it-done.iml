@@ -8,17 +8,26 @@
       <sourceFolder url="file://$MODULE_DIR$/backend/tests" isTestSource="true" packagePrefix="Tests\" />
       <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/php-http/message-factory" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/firebase/php-jwt" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/nikic/php-parser" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/laravel/passport" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/ramsey/collection" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/ralouphie/getallheaders" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/ramsey/uuid" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/paragonie/constant_time_encoding" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/paragonie/random_compat" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/tijsverkoyen/css-to-inline-styles" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/facade/ignition-contracts" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/mockery/mockery" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/lcobucci/jwt" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/lcobucci/clock" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/nunomaduro/collision" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/league/flysystem" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/sebastian/global-state" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/stella-maris/clock" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/league/commonmark" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/defuse/php-encryption" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/league/config" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/sebastian/complexity" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/league/mime-type-detection" />
@@ -69,10 +78,12 @@
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/symfony/polyfill-intl-normalizer" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/dragonmantank/cron-expression" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/symfony/http-kernel" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/phpseclib/phpseclib" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/symfony/mailer" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/symfony/finder" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/monolog/monolog" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/symfony/translation" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/symfony/psr-http-message-bridge" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/symfony/polyfill-mbstring" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/symfony/translation-contracts" />
@@ -85,9 +96,15 @@
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/psr/event-dispatcher" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/psr/log" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/psr/simple-cache" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/league/event" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/league/uri" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/league/uri-interfaces" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/fruitcake/php-cors" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/league/oauth2-server" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/intervention/image" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/egulias/email-validator" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/nesbot/carbon" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/spatie/laravel-permission" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/phpunit/php-timer" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/phpunit/php-file-iterator" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/phpunit/php-text-template" />
@@ -107,6 +124,7 @@
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/nette/utils" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/hamcrest/hamcrest-php" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/doctrine/instantiator" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/nyholm/psr7" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/spatie/backtrace" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/myclabs/deep-copy" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/spatie/laravel-ignition" />

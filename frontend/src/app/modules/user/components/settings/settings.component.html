@@ -1,0 +1,87 @@
+<!--<div class="container-fluid">-->
+<!--  <div class="row">-->
+<!--    <div class="col-md-3">-->
+<!--      <app-profile-sidebar></app-profile-sidebar>-->
+<!--    </div>-->
+
+<!--    <div class="col-md-9">-->
+<!--      <div class="card card-primary card-tabs">-->
+
+<!--        <div class="card-header p-0 pt-1">-->
+<!--          <ul class="nav nav-tabs">-->
+
+<!--            <li class="nav-item">-->
+<!--              <a-->
+<!--                class="nav-link"-->
+<!--                [ngClass]="{'active': activeTab === 'user-settings'}"-->
+<!--                href="#user-settings"-->
+<!--                data-toggle="tab"-->
+<!--                [routerLink]="['/settings/user-settings']"-->
+<!--              >User Settings</a>-->
+<!--            </li>-->
+
+<!--            <li class="nav-item" *ngIf="hasPermissionTo('view staff')">-->
+<!--              <a-->
+<!--                class="nav-link"-->
+<!--                [ngClass]="{'active': activeTab === 'staff'}"-->
+<!--                href="#staff"-->
+<!--                data-toggle="tab"-->
+<!--                [routerLink]="['/settings/staff']"-->
+<!--              >Staff</a>-->
+<!--            </li>-->
+
+<!--            <li class="nav-item" *ngIf="hasPermissionTo('view account settings')">-->
+<!--              <a-->
+<!--                class="nav-link"-->
+<!--                [ngClass]="{'active': activeTab === 'account-settings'}"-->
+<!--                href="#account-settings"-->
+<!--                data-toggle="tab"-->
+<!--                [routerLink]="['/settings/account-settings']"-->
+<!--              >Account Settings</a>-->
+<!--            </li>-->
+
+<!--          </ul>-->
+<!--        </div>-->
+
+<!--        <div class="card-body">-->
+
+<!--          <div class="tab-content">-->
+<!--            <div-->
+<!--              class="tab-pane"-->
+<!--              [ngClass]="{'active': activeTab === 'user-settings'}"-->
+<!--              id="user-settings"-->
+<!--            >-->
+<!--              <app-user-settings></app-user-settings>-->
+<!--            </div>-->
+
+<!--            <div-->
+<!--              class="tab-pane"-->
+<!--              [ngClass]="{'active': activeTab === 'staff'}"-->
+<!--              id="staff"-->
+<!--              *ngIf="hasPermissionTo('view staff')"-->
+<!--            >-->
+<!--              <app-staff-list></app-staff-list>-->
+<!--            </div>-->
+
+<!--            <div-->
+<!--              class="tab-pane"-->
+<!--              [ngClass]="{'active': activeTab === 'account-settings'}"-->
+<!--              id="account-settings"-->
+<!--              *ngIf="hasPermissionTo('view account settings')"-->
+<!--            >-->
+<!--              <app-account-settings></app-account-settings>-->
+<!--            </div>-->
+
+<!--          </div>-->
+
+<!--        </div>-->
+<!--      </div>-->
+
+<!--    </div>-->
+
+<!--  </div>-->
+
+<!--</div>-->
+
+
+

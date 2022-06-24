@@ -2,25 +2,28 @@
 
 namespace App\Models;
 
+
+use App\Notifications\VerifyApiEmail;
+use App\Traits\TableUUID;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Laravel\Passport\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, HasApiTokens, Notifiable, \Illuminate\Auth\MustVerifyEmail, HasRoles, SoftDeletes, TableUUID;
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var array
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'name', 'email', 'password', 'avatar', 'account_id',
     ];
 
     /**
@@ -41,4 +44,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Sends out the email for email verification
+     */
+    public function sendApiEmailVerificationNotification(): void
+    {
+        $this->notify(new VerifyApiEmail); // my notification
+    }
 }

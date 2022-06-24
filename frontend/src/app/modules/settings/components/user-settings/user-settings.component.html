@@ -1,0 +1,92 @@
+<app-main-header [header]="'User Settings'" [breadCrumbs]="breadCrumbs"></app-main-header>
+
+<div class="row">
+  <div class="col-12 small-col">
+    <div class="card">
+      <div class="card-body">
+
+        <form class="form-horizontal" [formGroup]="userEditForm" (ngSubmit)="submitEdit()">
+          <div class="mb-2">
+            <img
+              [src]="avatarImageLink"
+              class="img-thumbnail avatar-preview mb-2"
+              (click)="fileInput.click()"
+              *ngIf="avatarImageLink" [alt]="userDetails.name"
+            >
+            <br/>
+            <input hidden (change)="imageInputChange($event.target)" #fileInput type="file" id="file">
+            <button type="button" (click)="fileInput.click()" class="btn btn-primary" hidden>Choose Image</button>
+            <span class="text-sm text-muted">Click to change</span>
+          </div>
+
+          <div class="form-group row">
+            <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+            <div class="col-sm-10">
+              <input type="email" class="form-control" id="inputName" placeholder="Name" formControlName="name">
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
+            <div class="col-sm-10">
+              <input type="email" class="form-control" id="inputEmail" placeholder="Email" formControlName="email">
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-10">
+              <button type="submit" class="btn btn-success" [disabled]="userEditForm.invalid">
+                <span class="fa fa-save"></span> Submit
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <hr/>
+
+        <form class="form-horizontal" [formGroup]="changePasswordForm" (ngSubmit)="submitChangePassword()">
+
+          <h3>Change Password</h3>
+
+          <div class="form-group row">
+            <label for="current_password" class="col-sm-2 col-form-label">Current Password</label>
+            <div class="col-sm-10">
+              <input type="password" class="form-control" id="current_password" placeholder="Current Password"
+                     formControlName="current_password">
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="new_password" class="col-sm-2 col-form-label">New Password</label>
+            <div class="col-sm-10">
+              <input type="password" class="form-control" id="new_password" placeholder="New Password"
+                     formControlName="new_password">
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="new_password_repeat" class="col-sm-2 col-form-label">Retype Password</label>
+            <div class="col-sm-10">
+              <input type="password" class="form-control" id="new_password_repeat" placeholder="Password Confirm"
+                     formControlName="new_password_repeat">
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-10">
+              <button type="submit" class="btn btn-success" [disabled]="changePasswordForm.invalid">
+                <span class="fa fa-save"></span> Submit
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <button class="btn btn-primary" (click)="refreshAccountDetails()">Refresh account details</button>
+        <br/>
+        <span class="text-warning text-sm">This will update stored user details</span>
+
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,78 @@
+<section class="hold-transition login-page">
+  <div class="login-box">
+    <div class="login-logo">
+      <p><b>{{siteName}}</b></p><!-- TODO comes from backend -->
+    </div>
+
+    <div class="card">
+      <div class="card-body login-card-body">
+        <p class="login-box-msg">Sign in to start your session</p>
+
+        <form (ngSubmit)="login()" [formGroup]="loginForm" method="post">
+
+          <div class="input-group mb-3">
+            <label for="email" class="sr-only">Email</label>
+            <input type="email" class="form-control" placeholder="Email" formControlName="email" id="email">
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-envelope"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="input-group mb-3">
+            <label for="password" class="sr-only">Password</label>
+            <input type="password" class="form-control" placeholder="Password" formControlName="password" id="password">
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-lock"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-8">
+              <div class="icheck-primary">
+                <input type="checkbox" id="remember">
+                <label for="remember">
+                  &nbsp;Remember Me
+                </label>
+              </div>
+            </div>
+
+            <div class="col-4">
+              <button type="submit" class="btn btn-primary btn-block" [disabled]="loginForm.invalid">
+                Sign In
+              </button>
+            </div>
+
+          </div>
+        </form>
+
+
+        <!-- TODO implement google and facebook logins -->
+        <!--      <div class="social-auth-links text-center mb-3">-->
+        <!--        <p>- OR -</p>-->
+
+        <!--        <a href="#" class="btn btn-block btn-primary mb-2 w-100">-->
+        <!--          <i class="fab fa-facebook mr-2"></i> Sign in using Facebook-->
+        <!--        </a>-->
+        <!--        <a href="#" class="btn btn-block btn-danger w-100">-->
+        <!--          <i class="fab fa-google-plus mr-2"></i> Sign in using Google-->
+        <!--        </a>-->
+        <!--      </div>-->
+
+
+        <p class="mb-1">
+          <a [routerLink]="['/user/forgot-password']">I forgot my password</a>
+        </p>
+        <p class="mb-1">
+          <a [routerLink]="['/user/register']">Register</a>
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+
+</section>

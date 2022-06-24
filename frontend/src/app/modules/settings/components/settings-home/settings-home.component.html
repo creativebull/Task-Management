@@ -1,0 +1,25 @@
+<app-main-header [header]="'Settings'" [breadCrumbs]="breadCrumbs"></app-main-header>
+<div class="card card-primary card-outline">
+
+  <div class="card-body">
+
+    <div class="row mt-4">
+
+      <div class="col-md-4 mb-5" *ngFor="let setting of displayedSettings">
+        <a [routerLink]="setting.routeParts">
+          <div class="row mx-0">
+            <div class="col-auto">
+              <div class="badge badge-light setting-icon">
+                <i class="fa {{setting.faIcon}} fa-2x"></i>
+              </div>
+            </div>
+            <div class="col ml-2"><h4 class="mb-0">{{setting.title}}</h4>
+              <p class="text-sm text-muted mb-0">{{setting.description}}</p></div>
+          </div>
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+</div>

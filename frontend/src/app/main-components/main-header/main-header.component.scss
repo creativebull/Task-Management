@@ -1,0 +1,64 @@
+.content-header {
+  padding: 0;
+  margin-top: -24px;
+  margin-left: -15px;
+  margin-right: -15px;
+  border-radius: 0;
+}
+
+.card-body {
+  border-radius: 0;
+  padding: 0.6rem 1.25rem 0.6rem;
+}
+
+.content-header > h1 {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.content-header > h1 > small {
+  font-size: 15px;
+  display: inline-block;
+  padding-left: 4px;
+  font-weight: 300;
+}
+
+.breadcrumb {
+  padding: 0;
+  margin-bottom: 0;
+  list-style: none;
+  border-radius: 0;
+  display: inline-block;
+}
+
+.breadcrumb > li {
+  display: inline-block;
+}
+
+.breadcrumb-list-item {
+  padding-left: .5rem;
+
+  &::after {
+    content: " /";
+  }
+
+  &::before {
+    color: #6c757d;
+  }
+
+  &.active {
+    color: #6c757d;
+  }
+}
+
+h1 {
+  font-size: 24px;
+}
+
+small {
+  font-size: 15px;
+  display: inline-block;
+  padding-left: 4px;
+  font-weight: 300;
+}

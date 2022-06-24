@@ -1,18 +1,30 @@
 <body>
 
-<app-navbar></app-navbar>
+<div class="wrapper" *ngIf="showNavs">
 
-<div class="container-fluid">
+  <app-navbar></app-navbar>
 
+  <div class="container-fluid">
 
-  <div class="row">
+    <div class="row">
 
-    <app-sidebar></app-sidebar>
+      <app-sidebar></app-sidebar>
 
-    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-      <router-outlet></router-outlet>
-    </main>
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <router-outlet></router-outlet>
+      </main>
+    </div>
   </div>
 </div>
+
+
+<div class="wrapper" *ngIf="!showNavs">
+  <section class="content">
+    <div class="container-fluid">
+      <router-outlet></router-outlet>
+    </div>
+  </section>
+</div>
+
 
 </body>
