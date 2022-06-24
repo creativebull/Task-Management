@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {Breadcrumb} from '../../../../interfaces/breadcrumb';
 
 @Component({
   selector: 'app-dashboard-home',
@@ -6,6 +7,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./dashboard-home.component.scss']
 })
 export class DashboardHomeComponent implements OnInit {
+
+  breadCrumbs: Breadcrumb[] = [
+    {linkText: 'Home', routeItems: ['']},
+  ]
 
   constructor() { }
 

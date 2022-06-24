@@ -1,22 +1,3 @@
-<!--<section class="content-header">-->
-<!--  <h1>-->
-<!--    {{header}}-->
-<!--    <small *ngIf="subHeader">{{subHeader}}</small>-->
-<!--  </h1>-->
-<!--  <ol class="breadcrumb">-->
-<!--    <li class="breadcrumb-list-item" *ngFor="let navItem of breadCrumbs">-->
-<!--      <a-->
-<!--        [routerLink]="navItem.routeItems"-->
-<!--        *ngIf="navItem.routeItems.length >0"-->
-<!--      >{{ navItem.linkText | uppercase}}</a>-->
-
-<!--      <p *ngIf="navItem.routeItems.length === 0">{{navItem.linkText | uppercase}}</p>-->
-
-<!--    </li>-->
-<!--  </ol>-->
-<!--</section>-->
-
-
 <section class="content-header">
   <div class="card card-body">
     <div class="row">
@@ -38,7 +19,6 @@
             >{{ navItem.linkText | uppercase}}</a>
 
             <span *ngIf="navItem.routeItems.length === 0">&nbsp;{{navItem.linkText | uppercase}}</span>
-
           </li>
         </ol>
 

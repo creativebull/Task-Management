@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {NgModule} from '@angular/core';
 import {PreloadAllModules, RouterModule, Routes} from '@angular/router';
 import {AuthGuard} from './guards/auth.guard';
 
@@ -6,12 +6,7 @@ const routes: Routes = [
   {
     path: '',
     redirectTo: '/dashboard',
-    pathMatch: 'full'
-  },
-  {
-    path: 'settings',
-    loadChildren: () => import('./modules/settings/settings.module').then(m => m.SettingsModule),
-    canActivate: [AuthGuard]
+    pathMatch: 'full',
   },
   {
     path: 'dashboard',
@@ -19,14 +14,20 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'settings',
+    loadChildren: () => import('./modules/settings/settings.module').then(m => m.SettingsModule),
+    canActivate: [AuthGuard]
+  },
+  {
     path: '**',
+    redirectTo: '/dashboard',
     pathMatch: 'full',
-    redirectTo: '/dashboard'
   }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {relativeLinkResolution: 'legacy', preloadingStrategy: PreloadAllModules})],
+  imports: [RouterModule.forRoot(routes, {preloadingStrategy: PreloadAllModules})],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}

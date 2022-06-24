@@ -4,7 +4,7 @@
 
 
       <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="#">
+        <a class="nav-link" aria-current="page" [routerLink]="['/dashboard']" [routerLinkActive]="'active'">
           <span class="fa fa-home"></span>
           Dashboard
         </a>
@@ -17,17 +17,17 @@
         <div class="collapse" id="tasks-collapse">
           <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">
+              <a class="nav-link" aria-current="page" [routerLink]="['/tasks', 'my-assigned-tasks']" [routerLinkActive]="'active'">
                 Assigned Tasks
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">
+              <a class="nav-link" aria-current="page" [routerLink]="['/tasks', 'created-by-me']" [routerLinkActive]="'active'">
                 Created By Me
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">
+              <a class="nav-link" aria-current="page" [routerLink]="['/tasks', 'all']" [routerLinkActive]="'active'">
                 All
               </a>
             </li>
@@ -43,9 +43,16 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" [routerLink]="['/settings']">
+        <a class="nav-link" [routerLink]="['/settings']" [routerLinkActive]="'active'">
           <span class="fa fa-cog"></span>
           Settings
+        </a>
+      </li>
+
+      <li class="nav-item nav-item-bottom">
+        <a class="nav-link" [routerLink]="['/user', 'logout']">
+          <span class="fa fa-arrow-left"></span>
+          Log Out
         </a>
       </li>
 
