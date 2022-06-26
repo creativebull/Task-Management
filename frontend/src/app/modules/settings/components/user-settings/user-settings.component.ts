@@ -129,7 +129,7 @@ export class UserSettingsComponent implements OnInit {
     });
   }
 
-  refreshAccountDetails() {
+  refreshUserDetails() {
     this.authService.refreshUserData();
     this.toastr.success('User details updated');
   }

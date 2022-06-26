@@ -2,7 +2,6 @@
 
 namespace App\Core\Helpers;
 
-use App\Core\Services\AccountSettings\AccountSettingService;
 use Carbon\Carbon;
 use Exception;
 
@@ -11,15 +10,14 @@ class Date
     public const STANDARD_DATE_FORMAT = 'Y-m-d H:i:s';
 
     protected static string $timezone = 'Europe/London';
-    protected static bool $gotTimezone = false;
 
     /**
      * @param string|null $date
      * @return string
      */
-    public static function toAccountTime(?string $date): ?string
+    public static function toUserTime(?string $date): ?string
     {
-        $timezone = self::accountTimezone();
+        $timezone = self::userTimezone();
 
         if (empty($date)) {
             return '';
@@ -34,7 +32,7 @@ class Date
      */
     public static function toUTC($date): string
     {
-        $timezone = self::accountTimezone();
+        $timezone = self::userTimezone();
 
         if (empty($date)) {
             return '';
@@ -46,21 +44,24 @@ class Date
     /**
      * @return string
      */
-    private static function accountTimezone(): string
+    private static function userTimezone(): string
     {
         $timezone = self::$timezone;
-        if (!self::$gotTimezone) {
-            $defaultTimezone = env('timezone', 'Europe/London');
-            if (isset(auth()->user()->account_id)) {
-                $timezone = AccountSettingService::fetchSettingForAccount(
-                    auth()->user()->account_id,
-                    'timezone',
-                    $defaultTimezone
-                );
-            } else {
-                $timezone = $defaultTimezone;
-            }
-        }
+
+        // TODO store the users timezone on the user row and retrieve it here
+
+//        if (!self::$gotTimezone) {
+//            $defaultTimezone = env('timezone', 'Europe/London');
+//            if (isset(auth()->user()->account_id)) {
+//                $timezone = AccountSettingService::fetchSettingForAccount(
+//                    auth()->user()->account_id,
+//                    'timezone',
+//                    $defaultTimezone
+//                );
+//            } else {
+//                $timezone = $defaultTimezone;
+//            }
+//        }
 
         return $timezone;
     }

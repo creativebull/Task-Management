@@ -20,29 +20,6 @@
 <!--              >User Settings</a>-->
 <!--            </li>-->
 
-<!--            <li class="nav-item" *ngIf="hasPermissionTo('view staff')">-->
-<!--              <a-->
-<!--                class="nav-link"-->
-<!--                [ngClass]="{'active': activeTab === 'staff'}"-->
-<!--                href="#staff"-->
-<!--                data-toggle="tab"-->
-<!--                [routerLink]="['/settings/staff']"-->
-<!--              >Staff</a>-->
-<!--            </li>-->
-
-<!--            <li class="nav-item" *ngIf="hasPermissionTo('view account settings')">-->
-<!--              <a-->
-<!--                class="nav-link"-->
-<!--                [ngClass]="{'active': activeTab === 'account-settings'}"-->
-<!--                href="#account-settings"-->
-<!--                data-toggle="tab"-->
-<!--                [routerLink]="['/settings/account-settings']"-->
-<!--              >Account Settings</a>-->
-<!--            </li>-->
-
-<!--          </ul>-->
-<!--        </div>-->
-
 <!--        <div class="card-body">-->
 
 <!--          <div class="tab-content">-->
@@ -61,15 +38,6 @@
 <!--              *ngIf="hasPermissionTo('view staff')"-->
 <!--            >-->
 <!--              <app-staff-list></app-staff-list>-->
-<!--            </div>-->
-
-<!--            <div-->
-<!--              class="tab-pane"-->
-<!--              [ngClass]="{'active': activeTab === 'account-settings'}"-->
-<!--              id="account-settings"-->
-<!--              *ngIf="hasPermissionTo('view account settings')"-->
-<!--            >-->
-<!--              <app-account-settings></app-account-settings>-->
 <!--            </div>-->
 
 <!--          </div>-->

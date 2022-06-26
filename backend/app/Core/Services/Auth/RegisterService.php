@@ -22,8 +22,9 @@ class RegisterService
     public function register(RegisterUserRequest $request): JsonResponse
     {
         // Check if we have an image
-        if (request('avatar')) {
-            $imagePath = request('avatar')->store('profile', 'public');
+        $avatar = request('avatar');
+        if ($avatar) {
+            $imagePath = $avatar->store('profile', 'public');
 
             Image::make(public_path("storage/{$imagePath}"))
                 ->fit(1000, 1000)
@@ -31,19 +32,11 @@ class RegisterService
             $imageArray = ['avatar' => $imagePath];
         }
 
-        // Get the data for the account from the request
-        $postArray = $request->all();
+        // Get the data for the user from the request
+        $postArray = $request->validated();
 
         // Encrypt the password
         $postArray['password'] = bcrypt($postArray['password']);
-
-        $accountId = 1; // TODO create the account system
-
-        if ($accountId === 0) {
-            throw ValidationException::withMessages(['account' => 'Host does not match any account']);
-        }
-
-        $postArray['account_id'] = $accountId;
 
         // Merge in the image if there is one
         $postArray = array_merge($postArray, $imageArray ?? []);
@@ -54,7 +47,7 @@ class RegisterService
         try {
             $user->sendApiEmailVerificationNotification();
         } catch (Exception $e) {
-            Log::error('Failed to notify staff member of new account: ' . $e->getMessage());
+            Log::error('Failed to notify staff member of new user: ' . $e->getMessage());
         }
 
         return response()->json([

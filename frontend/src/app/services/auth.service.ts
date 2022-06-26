@@ -23,40 +23,12 @@ export class AuthService {
   private static blankUser() {
     const loggedInUser: LoggedInUser = {
       uuid: '',
-      account_id: 0,
-      account_options: {
-        account_currency: {option: 'currency', option_value: ''},
-        labour_charge: {option: 'labour_charge', option_value: ''},
-        timezone: {option: 'labour_charge', option_value: ''},
-        tax: {option: 'tax', option_value: ''},
-        vat_number: {option: 'vat_number', option_value: ''},
-        account_facebook: {option: 'account_facebook', option_value: ''},
-        account_twitter: {option: 'account_twitter', option_value: ''},
-        account_instagram: {option: 'account_instagram', option_value: ''},
-        account_linkedin: {option: 'account_linkedin', option_value: ''},
-        account_youtube: {option: 'account_youtube', option_value: ''},
-      },
       avatar: '',
       created_at: '',
       email: '',
       is_verified: false,
       name: '',
       permissions: [],
-      account: {
-        name: '',
-        created_at: '',
-        uuid: '',
-        updated_at: '',
-        url: '',
-        avatar: '',
-        account_address: '',
-        account_postcode: '',
-        account_email: '',
-        account_country: '',
-        account_phone_number: '',
-        vat_number: '',
-        website_address: '',
-      },
     };
 
     return loggedInUser;
@@ -192,9 +164,5 @@ export class AuthService {
 
   submitPasswordReset(formData: FormData): Observable<{ success: boolean, errorMessages: string[]}> {
     return this.http.post<any>(this.apiUrl + 'user/forgot-password/reset', formData);
-  }
-
-  updateAccountBasicDetails(formData: FormData): Observable<any> {
-    return this.http.post(this.apiUrl + 'account/update', formData);
   }
 }

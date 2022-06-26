@@ -11,7 +11,7 @@ export class SettingsComponent implements OnInit {
 
   activeTab = 'user-settings';
 
-  availableTabs = ['user-settings', 'staff', 'account-settings'];
+  availableTabs = ['user-settings'];
 
   constructor(
     private route: ActivatedRoute,

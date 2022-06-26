@@ -29,11 +29,6 @@ class LoginService
             throw ValidationException::withMessages(['user' => 'Use could not be found']);
         }
 
-        // Check account can access this domain
-        if (!$this->userCanAccessDomain($user, $request->header('origin'))) {
-            throw ValidationException::withMessages(['email' => trans('does_not_belong_to_account')]);
-        }
-
         return response()->json(['token' => $user->createToken('LaraPassport')->accessToken]);
     }
 }

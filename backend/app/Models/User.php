@@ -2,17 +2,23 @@
 
 namespace App\Models;
 
-
 use App\Notifications\VerifyApiEmail;
 use App\Traits\TableUUID;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
+/**
+ * @property string $uuid
+ * @property string $name
+ * @property string $email
+ * @property string $avatar
+ */
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, HasApiTokens, Notifiable, \Illuminate\Auth\MustVerifyEmail, HasRoles, SoftDeletes, TableUUID;
@@ -23,7 +29,10 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'avatar', 'account_id',
+        'name',
+        'email',
+        'password',
+        'avatar',
     ];
 
     /**
@@ -50,6 +59,14 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function sendApiEmailVerificationNotification(): void
     {
-        $this->notify(new VerifyApiEmail); // my notification
+        $this->notify(new VerifyApiEmail);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class);
     }
 }

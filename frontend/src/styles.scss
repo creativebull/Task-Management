@@ -4,13 +4,13 @@
 @import "src/assets/scss/sidebar";
 @import "src/assets/scss/navbar";
 
-
 body {
   font-family: 'Montserrat', sans-serif;
   min-height: 100vh;
   min-height: -moz-available;
   min-height: -webkit-stretch;
   min-height: stretch;
+  overflow: hidden;
 }
 
 html {

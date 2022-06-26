@@ -31,7 +31,7 @@ class UserDetailsResource extends JsonResource
             'email' => $this->email,
             'avatar' => $this->avatar,
             'is_verified' => $this->hasVerifiedEmail(),
-            'created_at' => (new Carbon(Date::toAccountTime($this->created_at)))->diffForHumans(),
+            'created_at' => (new Carbon(Date::toUserTime($this->created_at)))->diffForHumans(),
             'permissions' => $permissions,
         ];
     }
