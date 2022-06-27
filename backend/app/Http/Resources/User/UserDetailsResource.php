@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\User;
 
-
 use App\Core\Helpers\Date;
 use Carbon\Carbon;
 use Illuminate\Http\Request;

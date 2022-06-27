@@ -6,8 +6,8 @@ use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Resources\Task\TaskResource;
 use App\Models\Task;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Http\Response;
 
 class TaskController extends Controller
 {
@@ -27,22 +27,24 @@ class TaskController extends Controller
      * Store a newly created resource in storage.
      *
      * @param StoreTaskRequest $request
-     * @return Response
+     * @return JsonResponse
      */
-    public function store(StoreTaskRequest $request): Response
+    public function store(StoreTaskRequest $request): JsonResponse
     {
-        //
+        $task = Task::query()->create($request->validated());
+
+        return response()->json(new TaskResource($task), 201);
     }
 
     /**
      * Display the specified resource.
      *
      * @param Task $task
-     * @return Response
+     * @return JsonResponse
      */
-    public function show(Task $task)
+    public function show(Task $task): JsonResponse
     {
-        //
+        return response()->json(new TaskResource($task));
     }
 
     /**
@@ -50,21 +52,25 @@ class TaskController extends Controller
      *
      * @param UpdateTaskRequest $request
      * @param Task $task
-     * @return Response
+     * @return JsonResponse
      */
-    public function update(UpdateTaskRequest $request, Task $task)
+    public function update(UpdateTaskRequest $request, Task $task): JsonResponse
     {
-        //
+        $task->update($request->validated());
+
+        return response()->json(new TaskResource($task), 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param Task $task
-     * @return Response
+     * @return JsonResponse
      */
-    public function destroy(Task $task)
+    public function destroy(Task $task): JsonResponse
     {
-        //
+        $task->delete();
+
+        return response()->json(null, 204);
     }
 }
