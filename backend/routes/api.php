@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TaskController;
+use App\Http\Controllers\WorkspaceController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,5 +28,13 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('logout', [AuthController::class, 'logout']);
     });
 
-    Route::apiResource('tasks', 'TaskController');
+    Route::apiResource('tasks', TaskController::class);
+
+    Route::prefix('workspaces')->group(function () {
+        Route::get('', [WorkspaceController::class, 'index'])->name('workspaces.index');
+        Route::post('', [WorkspaceController::class, 'store'])->name('workspaces.store');
+        Route::get('{workspace:uuid}', [WorkspaceController::class, 'show'])->name('workspaces.show');
+        Route::put('{workspace}', [WorkspaceController::class, 'update'])->name('workspaces.update');
+        Route::delete('{workspace}', [WorkspaceController::class, 'destroy'])->name('workspaces.destroy');
+    });
 });

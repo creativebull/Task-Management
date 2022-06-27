@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\TableUUID;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Task extends Model
 {
-    use HasFactory;
+    use HasFactory, TableUUID;
 
     public const TODO = 'todo';
     public const BLOCKED = 'blocked';
@@ -23,11 +24,6 @@ class Task extends Model
         'status',
     ];
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
     public static function statuses(): array
     {
         return [
@@ -36,5 +32,21 @@ class Task extends Model
             self::IN_PROGRESS,
             self::DONE,
         ];
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function workspace(): BelongsTo
+    {
+        return $this->belongsTo(Workspace::class);
     }
 }
