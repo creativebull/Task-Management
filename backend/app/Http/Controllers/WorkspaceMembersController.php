@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreWorkspaceMembersRequest;
 use App\Http\Requests\UpdateWorkspaceMembersRequest;
+use App\Http\Requests\WorkspaceMembers\WorkspaceMemberInviteRequest;
 use App\Http\Resources\Workspace\WorkspaceCollection;
+use App\Models\User;
 use App\Models\Workspace;
 use App\Models\WorkspaceMembers;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -12,6 +14,21 @@ use Illuminate\Http\Response;
 
 class WorkspaceMembersController extends Controller
 {
+    public function invite(WorkspaceMemberInviteRequest $request)
+    {
+        $email = $request->get('email');
+
+        $user = User::query()->where('email', '=', $email)->first();
+
+        if($user === null) {
+            // The person with this email address does not currently exist in the system.
+            // TODO send notification about signing up for the system.
+        }
+
+        // Send the standard invite link
+        // TODO send the invite link to the user.
+    }
+
     /**
      * Display a listing of the resource.
      *

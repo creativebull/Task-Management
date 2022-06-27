@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\WorkspaceController;
+use App\Http\Controllers\WorkspaceMembersController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,5 +37,9 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('{workspace:uuid}', [WorkspaceController::class, 'show'])->name('workspaces.show');
         Route::put('{workspace}', [WorkspaceController::class, 'update'])->name('workspaces.update');
         Route::delete('{workspace}', [WorkspaceController::class, 'destroy'])->name('workspaces.destroy');
+    });
+
+    Route::prefix('workspace-members')->group(function () {
+        Route::post('invite', [WorkspaceMembersController::class, 'invite'])->name('workspace-members.invite');
     });
 });
