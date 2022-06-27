@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreTaskUserAccessRequest;
-use App\Http\Requests\UpdateTaskUserAccessRequest;
+use App\Http\Requests\Tasks\StoreTaskUserAccessRequest;
+use App\Http\Requests\Tasks\UpdateTaskUserAccessRequest;
 use App\Models\TaskUserAccess;
 use Illuminate\Http\Response;
 

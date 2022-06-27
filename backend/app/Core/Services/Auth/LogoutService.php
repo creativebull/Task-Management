@@ -9,7 +9,9 @@ class LogoutService
 {
     public function logout(): JsonResponse
     {
-        Auth::logout();
+        if (Auth::user() !== null) {
+            Auth::user()->token()->revoke();
+        }
         return response()->json(['success' => true]);
     }
 }

@@ -2,31 +2,31 @@
 
 namespace App\Core\Services\Auth;
 
+use App\Exceptions\UserException;
+use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
 
 class LoginService
 {
     /**
      * Sorts out the user login
      *
-     * @param Request $request
+     * @param LoginRequest $request
      * @return JsonResponse
-     * @throws ValidationException
+     * @throws UserException
      */
-    public function login(Request $request): JsonResponse
+    public function login(LoginRequest $request): JsonResponse
     {
         if (!Auth::attempt(['email' => $request->get('email'), 'password' => $request->get('password')])) {
-            throw ValidationException::withMessages(['email' => trans('auth.failed')]);
+            throw UserException::invalidLogin();
         }
 
         $user = Auth::user();
 
         // In the case that the user is null
         if ($user === null) {
-            throw ValidationException::withMessages(['user' => 'Use could not be found']);
+            throw UserException::userNotFound();
         }
 
         return response()->json(['token' => $user->createToken('LaraPassport')->accessToken]);

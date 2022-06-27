@@ -8,23 +8,24 @@ use App\Core\Services\Auth\RegisterService;
 use App\Core\Services\Auth\UserChangePasswordService;
 use App\Core\Services\Auth\UserDetailsService;
 use App\Core\Services\Auth\UserUpdateService;
+use App\Exceptions\UserException;
 use App\Http\Requests\Auth\ChangePasswordRequest;
+use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterUserRequest;
 use App\Http\Requests\Auth\UpdateUserRequest;
 use App\Http\Resources\User\UserDetailsResource;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
     /**
      * Login API
-     * @param Request $request
+     * @param LoginRequest $request
      * @return JsonResponse
-     * @throws ValidationException
+     * @throws UserException
      */
-    public function login(Request $request): JsonResponse
+    public function login(LoginRequest $request): JsonResponse
     {
         return (new LoginService())->login($request);
     }

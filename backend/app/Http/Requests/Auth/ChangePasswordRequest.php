@@ -12,7 +12,7 @@ class ChangePasswordRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return Auth::check();
     }
@@ -22,12 +22,12 @@ class ChangePasswordRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            'current_password' => 'required|min:8|max:255',
-            'new_password' => 'required|min:8|max:255|different:current_password',
-            'new_password_repeat' => 'required|same:new_password|min:8|max:255',
+            'current_password' => ['required', 'min:7', 'max:255'],
+            'new_password' => ['required', 'min:7', 'max:255', 'different:current_password'],
+            'new_password_repeat' => ['required', 'same:new_password', 'max:255'],
         ];
     }
 }
