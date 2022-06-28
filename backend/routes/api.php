@@ -41,5 +41,6 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::prefix('workspace-members')->group(function () {
         Route::post('invite', [WorkspaceMembersController::class, 'invite'])->name('workspace-members.invite');
+        Route::get('details/{workspaceInvite:token}', [WorkspaceMembersController::class, 'details'])->name('workspace-members.details');
     });
 });

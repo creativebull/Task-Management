@@ -22,11 +22,12 @@ class WorkspaceMemberInviteRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    #[ArrayShape(['email' => "string[]"])]
+    #[ArrayShape(['email' => "string[]", 'workspace_uuid' => "string[]"])]
     public function rules(): array
     {
         return [
             'email' => ['required', 'email'],
+            'workspace_uuid' => ['required', 'uuid'],
         ];
     }
 }

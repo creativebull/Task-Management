@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Models\Workspace;
+use App\Models\WorkspaceInvite;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -12,6 +13,7 @@ class UserSignupWorkspaceInvite extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public WorkspaceInvite $workspaceInvite;
     public Workspace $workspace;
 
     /**
@@ -32,7 +34,7 @@ class UserSignupWorkspaceInvite extends Mailable
     public function build(): static
     {
         return $this->markdown('emails.workspace.user-invite', [
-            'url' => env('APP_URL') . '/signup/' . $this->workspace->uuid,
+            'url' => env('APP_URL') . '/workspace-signup/' . $this->workspaceInvite->token,
         ]);
     }
 }
