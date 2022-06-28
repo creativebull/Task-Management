@@ -2,31 +2,60 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\WorkspaceException;
 use App\Http\Requests\StoreWorkspaceMembersRequest;
 use App\Http\Requests\UpdateWorkspaceMembersRequest;
 use App\Http\Requests\WorkspaceMembers\WorkspaceMemberInviteRequest;
 use App\Http\Resources\Workspace\WorkspaceCollection;
+use App\Mail\UserSignupWorkspaceInvite;
 use App\Models\User;
 use App\Models\Workspace;
 use App\Models\WorkspaceMembers;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Mail;
 
 class WorkspaceMembersController extends Controller
 {
-    public function invite(WorkspaceMemberInviteRequest $request)
+    /**
+     * @throws WorkspaceException
+     */
+    public function invite(WorkspaceMemberInviteRequest $request): JsonResponse
     {
         $email = $request->get('email');
 
         $user = User::query()->where('email', '=', $email)->first();
 
-        if($user === null) {
-            // The person with this email address does not currently exist in the system.
-            // TODO send notification about signing up for the system.
+        /** @var Workspace $workspace */
+        $workspace = Workspace::fromUuId($request->get('workspace_uuid'));
+
+        if ($workspace === null) {
+            throw WorkspaceException::workspaceNotFound();
         }
+
+        if ($user === null) {
+            // The person with this email address does not currently exist in the system.
+
+            $userSignupInvite = new UserSignupWorkspaceInvite();
+            $userSignupInvite->workspace = $workspace;
+
+            Mail::to($email)->send($userSignupInvite);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Test,'
+            ]);
+        }
+
+
 
         // Send the standard invite link
         // TODO send the invite link to the user.
+
+        return response()->json([
+            'success' => 'true',
+        ]);
     }
 
     /**
@@ -58,7 +87,7 @@ class WorkspaceMembersController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\WorkspaceMembers $workspaceMembers
+     * @param WorkspaceMembers $workspaceMembers
      * @return Response
      */
     public function show(WorkspaceMembers $workspaceMembers)
@@ -69,8 +98,8 @@ class WorkspaceMembersController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \App\Http\Requests\UpdateWorkspaceMembersRequest $request
-     * @param \App\Models\WorkspaceMembers $workspaceMembers
+     * @param UpdateWorkspaceMembersRequest $request
+     * @param WorkspaceMembers $workspaceMembers
      * @return Response
      */
     public function update(UpdateWorkspaceMembersRequest $request, WorkspaceMembers $workspaceMembers)
@@ -81,7 +110,7 @@ class WorkspaceMembersController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\WorkspaceMembers $workspaceMembers
+     * @param WorkspaceMembers $workspaceMembers
      * @return Response
      */
     public function destroy(WorkspaceMembers $workspaceMembers)
