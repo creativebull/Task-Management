@@ -20,6 +20,9 @@ use Illuminate\Support\Facades\Route;
 Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::post('register', [AuthController::class, 'register'])->name('register');
 
+// Details for workspace invite, Needs to be public
+Route::get('details/{workspaceInvite:token}', [WorkspaceMembersController::class, 'details'])->name('workspace-members.details');
+
 Route::middleware(['auth:api'])->group(function () {
 
     Route::prefix('user')->group(function () {
@@ -35,13 +38,12 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('', [WorkspaceController::class, 'index'])->name('workspaces.index');
         Route::post('', [WorkspaceController::class, 'store'])->name('workspaces.store');
         Route::get('{workspace:uuid}', [WorkspaceController::class, 'show'])->name('workspaces.show');
-        Route::put('{workspace}', [WorkspaceController::class, 'update'])->name('workspaces.update');
+        Route::put('{workspace:uuid}', [WorkspaceController::class, 'update'])->name('workspaces.update');
         Route::delete('{workspace}', [WorkspaceController::class, 'destroy'])->name('workspaces.destroy');
     });
 
     Route::prefix('workspace-members')->group(function () {
         Route::post('invite', [WorkspaceMembersController::class, 'invite'])->name('workspace-members.invite');
-        Route::get('details/{workspaceInvite:token}', [WorkspaceMembersController::class, 'details'])->name('workspace-members.details');
         Route::get('accept/{workspaceInvite:token}', [WorkspaceMembersController::class, 'accept'])->name('workspace-members.accept');
     });
 });

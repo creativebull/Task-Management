@@ -6,8 +6,6 @@ import {ForgotPasswordComponent} from './components/forgot-password/forgot-passw
 import {LogoutComponent} from './components/logout/logout.component';
 import {ForgotPasswordConfirmComponent} from './components/forgot-password-confirm/forgot-password-confirm.component';
 import {CommonModule} from '@angular/common';
-import {ProfileSidebarComponent} from './components/settings/profile-sidebar/profile-sidebar.component';
-import {SettingsComponent} from './components/settings/settings.component';
 import {UserSettingsComponent} from '../settings/components/user-settings/user-settings.component';
 import {DataTablesModule} from 'angular-datatables';
 import {SweetAlert2Module} from '@sweetalert2/ngx-sweetalert2';
@@ -26,10 +24,8 @@ import { RegisterComponent } from './components/register/register.component';
   declarations: [
     LoginComponent,
     ForgotPasswordComponent,
-    SettingsComponent,
     LogoutComponent,
     ForgotPasswordConfirmComponent,
-    ProfileSidebarComponent,
     UserSettingsComponent,
     RegisterComponent
   ]

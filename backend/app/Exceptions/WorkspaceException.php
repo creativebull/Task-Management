@@ -44,4 +44,9 @@ class WorkspaceException extends CustomBaseException
         return new self('Invalid user for invite', ['workspace' => trans('workspace.invalid_user')]);
     }
 
+    public static function workspaceSameName(): WorkspaceException
+    {
+        return new self('There is already a workspace with this name', ['workspace' => trans('workspace.duplicate_workspace')]);
+    }
+
 }

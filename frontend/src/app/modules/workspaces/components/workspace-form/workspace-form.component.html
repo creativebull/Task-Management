@@ -1,0 +1,21 @@
+<div class="card">
+  <div class="card-body">
+    <form method="post" [formGroup]="workspaceForm" (ngSubmit)="handleSubmit()">
+
+      <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" class="form-control" id="name" placeholder="Workspace Name..." formControlName="name">
+      </div>
+
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea class="form-control" id="description" style="resize: vertical;" formControlName="description"></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-success" [disabled]="workspaceForm.invalid || saving">
+        <spinner [show]="saving"></spinner> <span class="fa fa-save" *ngIf="!saving"></span> Submit
+      </button>
+
+    </form>
+  </div>
+</div>

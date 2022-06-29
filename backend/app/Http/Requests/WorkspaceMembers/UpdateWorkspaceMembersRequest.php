@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\WorkspaceMembers;
 
 use Illuminate\Foundation\Http\FormRequest;
-use JetBrains\PhpStorm\ArrayShape;
 
-class StoreWorkspaceRequest extends FormRequest
+class UpdateWorkspaceMembersRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,11 +21,10 @@ class StoreWorkspaceRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    #[ArrayShape(['name' => "string[]"])]
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
+            //
         ];
     }
 }

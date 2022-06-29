@@ -11,17 +11,22 @@ const routes: Routes = [
   {
     path: 'dashboard',
     loadChildren: () => import('./modules/dashboard/dashboard.module').then(m => m.DashboardModule),
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'workspaces',
+    loadChildren: () => import('./modules/workspaces/workspaces.module').then(m => m.WorkspacesModule),
+    canActivate: [AuthGuard],
   },
   {
     path: 'tasks',
     loadChildren: () => import('./modules/tasks/tasks.module').then(m => m.TasksModule),
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'settings',
     loadChildren: () => import('./modules/settings/settings.module').then(m => m.SettingsModule),
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: '**',

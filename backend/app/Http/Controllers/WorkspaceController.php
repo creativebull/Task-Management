@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreWorkspaceRequest;
-use App\Http\Requests\UpdateWorkspaceRequest;
+use App\Exceptions\WorkspaceException;
+use App\Http\Requests\Workspace\StoreWorkspaceRequest;
+use App\Http\Requests\Workspace\UpdateWorkspaceRequest;
 use App\Http\Resources\Workspace\WorkspaceCollection;
 use App\Http\Resources\Workspace\WorkspaceResource;
 use App\Models\Workspace;
@@ -17,7 +18,7 @@ class WorkspaceController extends Controller
      */
     public function index(): JsonResponse
     {
-        $workspaces = Workspace::query()->where('user_id', '=', auth()->user()->id)->get();
+        $workspaces = Workspace::query()->with(['user'])->where('user_id', '=', auth()->user()->id)->get();
 
         return response()->json(new WorkspaceCollection(WorkspaceResource::collection($workspaces)));
     }
@@ -32,6 +33,15 @@ class WorkspaceController extends Controller
     {
         $validated = $request->validated();
         $validated['user_id'] = auth()->user()->id;
+
+        $workspace = new Workspace($validated);
+
+        // Check if there is already a workspace with the same name
+        $existingWorkspace = Workspace::query()->where('user_id', '=', auth()->user()->id)->where('name', '=', $workspace->name)->first();
+
+        if ($existingWorkspace) {
+            throw WorkspaceException::workspaceSameName();
+        }
 
         $workspace = Workspace::query()->create($validated);
 
