@@ -28,4 +28,20 @@ class WorkspaceException extends CustomBaseException
         return new self('Workspace Invite expired', ['workspace' => trans('workspace.workspace_invite_expired')]);
     }
 
+    /**
+     * @return WorkspaceException
+     */
+    public static function cannotInviteOwner(): WorkspaceException
+    {
+        return new self('Cannot Invite Owner', ['workspace' => trans('workspace.cannot_invite_owner')]);
+    }
+
+    /**
+     * @return WorkspaceException
+     */
+    public static function inviteDoesNotMatch(): WorkspaceException
+    {
+        return new self('Invalid user for invite', ['workspace' => trans('workspace.invalid_user')]);
+    }
+
 }

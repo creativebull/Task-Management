@@ -14,9 +14,18 @@ class WorkspaceInvite extends Model
     protected $fillable = [
         'workspace_id',
         'email',
+        'user_id',
         'token',
         'expires_at',
     ];
+
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     /**
      * @return BelongsTo
