@@ -11,26 +11,26 @@
 
       <li class="nav-item">
         <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#tasks-collapse" aria-expanded="false">
-          Tasks
+          Boards
         </button>
         <div class="collapse" id="tasks-collapse">
           <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
 
             <li class="nav-item">
-              <a class="nav-link" aria-current="page" [routerLink]="['/tasks', 'my-assigned-tasks']" [routerLinkActive]="'active'">
-                Assigned Tasks
+              <a class="nav-link" aria-current="page" [routerLink]="['/boards']" [routerLinkActive]="'active'">
+                All Boards
               </a>
             </li>
 
             <li class="nav-item">
-              <a class="nav-link" aria-current="page" [routerLink]="['/tasks', 'created-by-me']" [routerLinkActive]="'active'">
-                Created By Me
+              <a class="nav-link" aria-current="page" [routerLink]="['/boards', 'my-boards']" [routerLinkActive]="'active'">
+                My Boards
               </a>
             </li>
 
             <li class="nav-item">
-              <a class="nav-link" aria-current="page" [routerLink]="['/tasks', 'all']" [routerLinkActive]="'active'">
-                All
+              <a class="nav-link" aria-current="page" [routerLink]="['/boards', 'create']" [routerLinkActive]="'active'">
+                New Board
               </a>
             </li>
 
@@ -56,19 +56,22 @@
 
     <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
       <span>Workspaces</span>
-      <a class="link-secondary" (click)="reloadWorkspaces()" aria-label="Add a new report">
+      <a class="link-secondary" (click)="loadWorkspaces()" aria-label="Add a new report">
         <span class="fa fa-redo"></span>
       </a>
-      <a class="link-secondary" href="#" aria-label="Add a new report">
+      <a class="link-secondary" [routerLink]="['/workspaces', 'create']" aria-label="Create a new workspace">
         <span class="fa fa-plus"></span>
       </a>
     </h6>
-    <ul class="nav flex-column mb-2">
+    <ul class="nav flex-column flex-nowrap mb-2 workspace-list" style="">
 
       <li class="nav-item" *ngFor="let workspace of workspaces">
-        <a class="nav-link" (click)="selectWorkspace(workspace.uuid)" style="cursor:pointer;">
+        <a class="nav-link" (click)="selectWorkspace(workspace)" style="cursor:pointer;">
           <span class="fa fa-briefcase"></span>
           {{workspace.name}}
+          <span *ngIf="workspace.uuid === activeWorkspace?.uuid">
+            <span class="fa fa-check"></span>
+          </span>
         </a>
       </li>
 

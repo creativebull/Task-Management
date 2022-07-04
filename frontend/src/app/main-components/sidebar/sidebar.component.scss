@@ -7,3 +7,21 @@
   bottom: 0;
   position: fixed;
 }
+
+.workspace-list {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  margin-bottom: 200px;
+  height: 100vh;
+  max-height: 600px;
+}
+
+@media screen and (max-height: 667px) {
+  .workspace-list {
+    max-height: 200px;
+  }
+
+  //.nav-item-bottom {
+  //  display: none;
+  //}
+}

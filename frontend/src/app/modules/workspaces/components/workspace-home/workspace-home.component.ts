@@ -3,6 +3,7 @@ import {WorkspaceService} from '../../../../services/workspace.service';
 import {Workspace} from '../../../../interfaces/workspace';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {Breadcrumb} from '../../../../interfaces/breadcrumb';
+import {ToastrService} from 'ngx-toastr';
 
 @UntilDestroy()
 @Component({
@@ -18,11 +19,22 @@ export class WorkspaceHomeComponent implements OnInit {
     {linkText: 'Workspaces', routeItems: ['/workspaces']},
   ];
 
-  constructor(private workspaceService: WorkspaceService) {
+  activeWorkspace?: Workspace;
+
+  constructor(private workspaceService: WorkspaceService, private toastr: ToastrService) {
   }
 
   ngOnInit(): void {
     this.loadWorkspaces();
+    this.loadActiveWorkspace();
+  }
+
+  loadActiveWorkspace() {
+    this.workspaceService.activeWorkspace?.subscribe({
+      next: (response) => {
+        this.activeWorkspace = response;
+      }
+    })
   }
 
   loadWorkspaces() {
@@ -35,6 +47,8 @@ export class WorkspaceHomeComponent implements OnInit {
 
   selectWorkspace(workspace: Workspace) {
     console.log(workspace);
+    this.workspaceService.setActiveWorkspace(workspace);
+    this.toastr.success('Workspace selected successfully');
   }
 
   updateWorkspace(workspace: Workspace) {

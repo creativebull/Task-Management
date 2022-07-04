@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Workspace} from '../../../../interfaces/workspace';
 import {Breadcrumb} from '../../../../interfaces/breadcrumb';
+import {WorkspaceService} from '../../../../services/workspace.service';
+import {ToastrService} from 'ngx-toastr';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-create-workspace',
@@ -14,12 +17,16 @@ export class CreateWorkspaceComponent implements OnInit {
     {linkText: 'Create Workspace', routeItems: []},
   ];
 
-  constructor() { }
+  constructor(private workspaceService: WorkspaceService, private toastr: ToastrService, private router: Router) {
+  }
 
   ngOnInit(): void {
   }
 
   workspaceCreated(workspace: Workspace) {
-    console.log(workspace);
+    this.workspaceService.setActiveWorkspace(workspace);
+    this.toastr.success('Workspace created successfully');
+    // TODO maybe redirect to boards here?
+    this.router.navigate(['/workspaces']);
   }
 }

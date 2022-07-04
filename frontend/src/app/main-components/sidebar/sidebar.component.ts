@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {environment} from '../../../environments/environment';
 import {WorkspaceService} from '../../services/workspace.service';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {Workspace} from '../../interfaces/workspace';
+
 @UntilDestroy()
 @Component({
   selector: 'app-sidebar',
@@ -11,14 +12,28 @@ import {Workspace} from '../../interfaces/workspace';
 })
 export class SidebarComponent implements OnInit {
   appName = environment.appName;
-  constructor(private workspaceService: WorkspaceService) { }
+  activeWorkspace?: Workspace;
+
+  constructor(private workspaceService: WorkspaceService) {
+  }
 
   workspaces: Workspace[] = [];
 
   ngOnInit(): void {
+    this.loadWorkspaces();
+    this.subscribeToActiveWorkspace();
   }
 
-  reloadWorkspaces() {
+  subscribeToActiveWorkspace()
+  {
+    this.workspaceService.activeWorkspaceSubject()?.pipe(untilDestroyed(this)).subscribe({
+      next: (response) => {
+        this.activeWorkspace = response;
+      }
+    });
+  }
+
+  loadWorkspaces() {
     this.workspaceService.fetchWorkspaces().pipe(untilDestroyed(this)).subscribe({
       next: (workspaces) => {
         this.workspaces = workspaces.data;
@@ -26,7 +41,7 @@ export class SidebarComponent implements OnInit {
     });
   }
 
-  selectWorkspace(uuid: string) {
-    console.log(uuid);
+  selectWorkspace(workspace: Workspace) {
+    this.workspaceService.setActiveWorkspace(workspace)
   }
 }

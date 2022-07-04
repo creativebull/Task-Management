@@ -1,13 +1,13 @@
-<app-main-header [title]="'Workspaces'" [breadCrumbs]="breadCrumbs"></app-main-header>
+<app-main-header [header]="'Workspaces'" [breadCrumbs]="breadCrumbs"></app-main-header>
 
-<div class="row">
+<div class="row mb-4">
   <div class="col-12 text-end">
     <button class="btn btn-primary btn-sm" [routerLink]="['/workspaces', 'create']"><span class="fa fa-plus"></span> Add Workspace</button>
   </div>
 </div>
 
-<div class="row">
-  <div class="col-4" *ngFor="let workspace of workspaces">
+<div class="row mb-2">
+  <div class="col-sm-4 mb-3" *ngFor="let workspace of workspaces">
     <div class="card">
       <div class="card-header">{{workspace.name}}</div>
       <div class="card-body">
@@ -16,7 +16,7 @@
       </div>
       <div class="card-footer">
         <div class="btn-group">
-          <button class="btn btn-primary btn-sm" (click)="selectWorkspace(workspace)">Select</button>
+          <button class="btn btn-primary btn-sm" (click)="selectWorkspace(workspace)" [disabled]="workspace.uuid === activeWorkspace?.uuid">Select</button>
           <a class="btn btn-secondary btn-sm" [routerLink]="['/workspaces', 'update', workspace.uuid]">Update</a>
           <button class="btn btn-danger btn-sm" (click)="deleteWorkspace(workspace)">Delete</button>
         </div>
