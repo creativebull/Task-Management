@@ -28,6 +28,7 @@ class WorkspaceController extends Controller
      *
      * @param StoreWorkspaceRequest $request
      * @return JsonResponse
+     * @throws WorkspaceException
      */
     public function store(StoreWorkspaceRequest $request): JsonResponse
     {

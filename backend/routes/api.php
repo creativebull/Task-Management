@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BoardController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\WorkspaceController;
 use App\Http\Controllers\WorkspaceMembersController;
+use App\Models\Workspace;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -33,6 +35,14 @@ Route::middleware(['auth:api'])->group(function () {
     });
 
     Route::apiResource('tasks', TaskController::class);
+
+    Route::prefix('boards')->group(function () {
+        Route::get('{workspace:uuid}', [BoardController::class, 'index'])->name('boards.index');
+        Route::post('{workspace:uuid}', [BoardController::class, 'store'])->name('boards.store');
+        Route::get('{workspace:uuid}/{board:uuid}', [BoardController::class, 'show'])->name('boards.show');
+        Route::put('{workspace:uuid}/{board:uuid}', [BoardController::class, 'update'])->name('boards.update');
+        Route::delete('{workspace:uuid}/{board:uuid}', [BoardController::class, 'destroy'])->name('boards.destroy');
+    });
 
     Route::prefix('workspaces')->group(function () {
         Route::get('', [WorkspaceController::class, 'index'])->name('workspaces.index');
