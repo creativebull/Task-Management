@@ -1,1 +1,9 @@
-<p>boards-home works!</p>
+<app-main-header [header]="'Boards'" [breadCrumbs]="breadCrumbs"></app-main-header>
+
+<div class="card">
+  <div class="card-body">
+    <div *ngFor="let board of boards">
+      {{board.name}}
+    </div>
+  </div>
+</div>
