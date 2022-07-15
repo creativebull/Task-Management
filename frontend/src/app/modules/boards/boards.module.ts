@@ -8,6 +8,7 @@ import { UpdateBoardComponent } from './components/update-board/update-board.com
 import { BoardFormComponent } from './components/board-form/board-form.component';
 import { BoardDetailsComponent } from './components/board-details/board-details.component';
 import {ReactiveFormsModule} from '@angular/forms';
+import {SortablejsModule} from 'ngx-sortablejs';
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import {ReactiveFormsModule} from '@angular/forms';
     SharedModule,
     CommonModule,
     ReactiveFormsModule,
+    SortablejsModule,
   ],
   declarations: [
     BoardsHomeComponent,

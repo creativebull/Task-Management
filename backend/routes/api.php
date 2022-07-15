@@ -34,14 +34,14 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('logout', [AuthController::class, 'logout']);
     });
 
-    Route::apiResource('tasks', TaskController::class);
-
     Route::prefix('boards')->group(function () {
         Route::get('{workspace:uuid}', [BoardController::class, 'index'])->name('boards.index');
         Route::post('{workspace:uuid}', [BoardController::class, 'store'])->name('boards.store');
         Route::get('{workspace:uuid}/{board:uuid}', [BoardController::class, 'show'])->name('boards.show');
         Route::put('{workspace:uuid}/{board:uuid}', [BoardController::class, 'update'])->name('boards.update');
         Route::delete('{workspace:uuid}/{board:uuid}', [BoardController::class, 'destroy'])->name('boards.destroy');
+
+        Route::get('{workspace:uuid}/{board:uuid}/tasks', [TaskController::class, 'index'])->name('tasks.index');
     });
 
     Route::prefix('workspaces')->group(function () {

@@ -1,1 +1,11 @@
-<p>board-details works!</p>
+<app-main-header></app-main-header>
+
+<h2>Drag / drop the item</h2>
+<h3>list 1</h3>
+<div class="items1" [sortablejs]="items1" [sortablejsOptions]="options">
+  <div *ngFor="let item of items1">{{ item }}</div>
+</div>
+<h3>list 2</h3>
+<div class="items2" [sortablejs]="items2" [sortablejsOptions]="options">
+  <div *ngFor="let item of items2">{{ item }}</div>
+</div>
