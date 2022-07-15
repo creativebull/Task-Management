@@ -21,6 +21,7 @@ class BoardResource extends JsonResource
             'description' => $this->description,
             'color' => $this->color,
             'icon' => $this->icon,
+            'image' => $this->image,
         ];
     }
 }

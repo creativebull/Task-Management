@@ -16,10 +16,11 @@ return new class extends Migration
         Schema::create('boards', static function (Blueprint $table) {
             $table->id();
             $table->uuid();
-            $table->unsignedBigInteger('workspace_id');
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('workspace_id')->index();
+            $table->unsignedBigInteger('user_id')->index();
             $table->string('name');
             $table->string('description')->nullable();
+            $table->string('image')->nullable();
             $table->string('color')->nullable();
             $table->string('icon')->nullable();
             $table->timestamps();

@@ -60,6 +60,8 @@ export class WorkspaceFormComponent implements OnInit {
           for (const error of errors) {
             this.toastr.error(error);
           }
+        } else {
+          this.toastr.error('Something went wrong');
         }
 
         this.saving = false;

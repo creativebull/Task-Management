@@ -5,6 +5,7 @@ import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {WorkspaceService} from '../../../../services/workspace.service';
 import {Board} from '../../../../interfaces/board';
 import {Breadcrumb} from '../../../../interfaces/breadcrumb';
+import {environment} from '../../../../../environments/environment';
 
 @UntilDestroy()
 @Component({
@@ -13,6 +14,8 @@ import {Breadcrumb} from '../../../../interfaces/breadcrumb';
   styleUrls: ['./boards-home.component.scss']
 })
 export class BoardsHomeComponent implements OnInit {
+
+  apiUrl = environment.apiUrl;
 
   activeWorkspace?: Workspace;
   boards: Board[] = [];

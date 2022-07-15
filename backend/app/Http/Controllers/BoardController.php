@@ -11,6 +11,8 @@ use App\Http\Resources\Board\BoardResource;
 use App\Models\Board;
 use App\Models\Workspace;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 use Throwable;
 
 class BoardController extends Controller
@@ -35,7 +37,7 @@ class BoardController extends Controller
      * @throws BoardException
      * @throws Throwable
      */
-    public function store(StoreBoardRequest $request, Workspace $workspace)
+    public function store(StoreBoardRequest $request, Workspace $workspace): JsonResponse
     {
         $requestData = $request->validated();
         $requestData['workspace_id'] = $workspace->id;
@@ -51,6 +53,29 @@ class BoardController extends Controller
         }
 
         $board->saveOrFail();
+
+        $image = $request->file('image');
+
+        // Check if there was a file, If so save it
+        if ($image !== null) {
+            $filename = time() . '_' . $image->getClientOriginalName();
+
+            $fullFilePath = Storage::disk('public')->path('board-images/' . $filename);
+            $databasePath = 'storage/board-images/' . $filename;
+
+            $interventionImage = Image::make($image);
+            $interventionImage->resize(200, 200, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save($fullFilePath);
+
+            $board->image = $databasePath;
+            $board->save();
+        } else {
+            $board->image = 'img/default-board-image.png';
+            $board->save();
+        }
+
+        $board->refresh();
 
         return response()->json(new BoardResource($board), 201);
     }
