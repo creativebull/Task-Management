@@ -27,7 +27,19 @@ import {SortablejsModule} from 'ngx-sortablejs';
     HttpClientModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
-    SweetAlert2Module.forRoot(),
+    SweetAlert2Module.forRoot({
+      // Add custom options into swal globally
+      provideSwal: () => import('sweetalert2').then(({ default: swal }) => swal.mixin(
+        {
+          // Use bootstrap 4 buttons
+          customClass: {
+            confirmButton: 'btn btn-success btn-mr',
+            cancelButton: 'btn btn-danger btn-mr'
+          },
+          buttonsStyling: false
+        }
+      ))
+    }),
     SortablejsModule.forRoot({animation: 150}),
     UserModule,
     AppRoutingModule

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Breadcrumb} from '../../../../interfaces/breadcrumb';
 import {Workspace} from '../../../../interfaces/workspace';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {WorkspaceService} from '../../../../services/workspace.service';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {ToastrService} from 'ngx-toastr';
@@ -21,9 +21,11 @@ export class UpdateWorkspaceComponent implements OnInit {
     {linkText: 'Update Workspace', routeItems: []},
   ];
 
-  constructor(private route: ActivatedRoute, private workspaceService: WorkspaceService, private toastr: ToastrService) {
-
-
+  constructor(
+    private route: ActivatedRoute,
+    private workspaceService: WorkspaceService,
+    private toastr: ToastrService,
+    private router: Router) {
   }
 
   ngOnInit(): void {
@@ -41,8 +43,9 @@ export class UpdateWorkspaceComponent implements OnInit {
     });
   }
 
-  workspaceUpdated($event: Workspace) {
-    console.log($event);
+  workspaceUpdated() {
+    this.workspaceService.refreshWorkspaceList();
     this.toastr.success('Workspace updated successfully');
+    this.router.navigate(['/workspaces']);
   }
 }

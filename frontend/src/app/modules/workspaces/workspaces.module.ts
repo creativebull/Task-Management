@@ -7,6 +7,7 @@ import { UpdateWorkspaceComponent } from './components/update-workspace/update-w
 import { WorkspaceFormComponent } from './components/workspace-form/workspace-form.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {SharedModule} from '../shared/shared.module';
+import {SweetAlert2Module} from '@sweetalert2/ngx-sweetalert2';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import {SharedModule} from '../shared/shared.module';
     CommonModule,
     WorkspaceRoutingModule,
     ReactiveFormsModule,
-    SharedModule
+    SharedModule,
+    SweetAlert2Module
   ]
 })
 export class WorkspacesModule {

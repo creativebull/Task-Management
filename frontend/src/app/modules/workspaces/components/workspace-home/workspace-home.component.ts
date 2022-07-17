@@ -16,7 +16,7 @@ export class WorkspaceHomeComponent implements OnInit {
   workspaces: Workspace[] = [];
   breadCrumbs: Breadcrumb[] = [
     {linkText: 'home', routeItems: ['/home']},
-    {linkText: 'Workspaces', routeItems: ['/workspaces']},
+    {linkText: 'Workspaces', routeItems: []},
   ];
 
   activeWorkspace?: Workspace;
@@ -38,28 +38,36 @@ export class WorkspaceHomeComponent implements OnInit {
   }
 
   loadWorkspaces() {
-    this.workspaceService.fetchWorkspaces().pipe(untilDestroyed(this)).subscribe({
+    this.workspaceService.refreshWorkspaceList();
+
+    this.workspaceService.workspaceListSubject().pipe(untilDestroyed(this)).subscribe({
       next: (response) => {
-        this.workspaces = response.data;
+        this.workspaces = response;
       }
     });
   }
 
   selectWorkspace(workspace: Workspace) {
-    console.log(workspace);
     this.workspaceService.setActiveWorkspace(workspace);
     this.toastr.success('Workspace selected successfully');
   }
 
-  updateWorkspace(workspace: Workspace) {
-    console.log(workspace);
-  }
-
   deleteWorkspace(workspace: Workspace) {
-    console.log(workspace);
-  }
+    // If we are deleting the active workspace, we need to set the active workspace to null
+    if (this.activeWorkspace?.uuid === workspace.uuid) {
+      this.workspaceService.setActiveWorkspace(undefined);
+    }
 
-  addWorkspace() {
-    console.log('add workspace');
+    // Send request to delete the workspace from the server
+    this.workspaceService.deleteWorkspace(workspace.uuid).pipe(untilDestroyed(this)).subscribe({
+      next: () => {
+        this.toastr.success('Workspace deleted successfully');
+        this.workspaceService.refreshWorkspaceList();
+
+      },
+      error: () => {
+        this.toastr.error('Failed to delete the workspace');
+      }
+    });
   }
 }

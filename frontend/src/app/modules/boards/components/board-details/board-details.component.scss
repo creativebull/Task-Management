@@ -1,0 +1,12 @@
+.task-list {
+  max-height: 95vh;
+  height: 100%;
+  overflow: auto;
+}
+
+.tasks-list-container {
+  height: 100%;
+  overflow-y: auto;
+  background-color: lightblue;
+  max-height: 85vh;
+}

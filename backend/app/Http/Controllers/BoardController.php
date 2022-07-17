@@ -63,17 +63,21 @@ class BoardController extends Controller
             $fullFilePath = Storage::disk('public')->path('board-images/' . $filename);
             $databasePath = 'storage/board-images/' . $filename;
 
+            // Ensure the directory exists
+            if (!Storage::disk('public')->exists('board-images')) {
+                Storage::disk('public')->makeDirectory('board-images');
+            }
+
             $interventionImage = Image::make($image);
             $interventionImage->resize(200, 200, function ($constraint) {
                 $constraint->aspectRatio();
             })->save($fullFilePath);
 
             $board->image = $databasePath;
-            $board->save();
         } else {
             $board->image = 'img/default-board-image.png';
-            $board->save();
         }
+        $board->save();
 
         $board->refresh();
 

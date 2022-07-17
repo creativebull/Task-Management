@@ -24,8 +24,7 @@ export class SidebarComponent implements OnInit {
     this.subscribeToActiveWorkspace();
   }
 
-  subscribeToActiveWorkspace()
-  {
+  subscribeToActiveWorkspace() {
     this.workspaceService.activeWorkspaceSubject()?.pipe(untilDestroyed(this)).subscribe({
       next: (response) => {
         this.activeWorkspace = response;
@@ -34,9 +33,11 @@ export class SidebarComponent implements OnInit {
   }
 
   loadWorkspaces() {
-    this.workspaceService.fetchWorkspaces().pipe(untilDestroyed(this)).subscribe({
-      next: (workspaces) => {
-        this.workspaces = workspaces.data;
+    this.workspaceService.refreshWorkspaceList();
+
+    this.workspaceService.workspaceListSubject().pipe(untilDestroyed(this)).subscribe({
+      next: (response) => {
+        this.workspaces = response;
       }
     });
   }

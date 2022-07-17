@@ -12,12 +12,31 @@ export class WorkspaceService {
   private apiUrl = environment.apiUrl;
 
   activeWorkspace?: ReplaySubject<Workspace> = new ReplaySubject<Workspace>(1);
+  workspaceList?: ReplaySubject<Workspace[]> = new ReplaySubject<Workspace[]>(1);
 
   constructor(private http: HttpClient) {
   }
 
-  activeWorkspaceSubject() {
+  workspaceListSubject(): ReplaySubject<Workspace[]> {
+    if (!this.workspaceList) {
+      this.workspaceList = new ReplaySubject<Workspace[]>();
+      this.refreshWorkspaceList();
+    }
+    return this.workspaceList;
+  }
 
+  refreshWorkspaceList() {
+    this.fetchWorkspaces().subscribe({
+      next: (response) => {
+        if (!this.workspaceList) {
+          this.workspaceList = new ReplaySubject<Workspace[]>();
+        }
+        this.workspaceList.next(response.data);
+      }
+    });
+  }
+
+  activeWorkspaceSubject() {
     let activeWorkspaceFromLocal = localStorage.getItem('activeWorkspace');
 
     if (activeWorkspaceFromLocal) {
@@ -30,14 +49,15 @@ export class WorkspaceService {
     return this.activeWorkspace;
   }
 
-  setActiveWorkspace(workspace: Workspace) {
+  setActiveWorkspace(workspace?: Workspace) {
     if (!this.activeWorkspace) {
       this.activeWorkspace = new ReplaySubject<Workspace>();
     }
 
     localStorage.setItem('activeWorkspace', JSON.stringify(workspace));
-
-    this.activeWorkspace.next(workspace);
+    if (workspace) {
+      this.activeWorkspace.next(workspace);
+    }
   }
 
   fetchWorkspaces(): Observable<{ data: Workspace[] }> {
@@ -55,5 +75,9 @@ export class WorkspaceService {
 
   details(uuid: string): Observable<Workspace> {
     return this.http.get<any>(this.apiUrl + 'workspaces/' + uuid);
+  }
+
+  deleteWorkspace(uuid: string) {
+    return this.http.delete<any>(this.apiUrl + 'workspaces/' + uuid);
   }
 }

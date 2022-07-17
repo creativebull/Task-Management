@@ -6,6 +6,7 @@ import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {LaravelErrorExtractorService} from '../../../../services/laravel-error-extractor.service';
 import {ToastrService} from 'ngx-toastr';
 import {SortableOptions} from 'sortablejs';
+import {Breadcrumb} from '../../../../interfaces/breadcrumb';
 
 @UntilDestroy()
 @Component({
@@ -31,6 +32,12 @@ export class BoardDetailsComponent implements OnInit {
   options: SortableOptions = {
     group: 'test'
   };
+
+  breadCrumbs: Breadcrumb[] = [
+    {linkText: 'Home', routeItems: ['/']},
+    {linkText: 'Boards', routeItems: ['/boards']},
+    {linkText: 'Tasks', routeItems: []}
+  ];
 
   ngOnInit(): void {
     this.workspaceService.activeWorkspace?.subscribe(workspace => {

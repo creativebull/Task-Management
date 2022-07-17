@@ -18,7 +18,11 @@
         <div class="btn-group">
           <button class="btn btn-primary btn-sm" (click)="selectWorkspace(workspace)" [disabled]="workspace.uuid === activeWorkspace?.uuid">Select</button>
           <a class="btn btn-secondary btn-sm" [routerLink]="['/workspaces', 'update', workspace.uuid]">Update</a>
-          <button class="btn btn-danger btn-sm" (click)="deleteWorkspace(workspace)">Delete</button>
+          <button
+            class="btn btn-danger btn-sm"
+            [swal]="{ title: 'Delete Workspace?', showCancelButton: true }"
+            (confirm)="deleteWorkspace(workspace)"
+          >Delete</button>
         </div>
       </div>
     </div>

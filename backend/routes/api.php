@@ -49,7 +49,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::post('', [WorkspaceController::class, 'store'])->name('workspaces.store');
         Route::get('{workspace:uuid}', [WorkspaceController::class, 'show'])->name('workspaces.show');
         Route::put('{workspace:uuid}', [WorkspaceController::class, 'update'])->name('workspaces.update');
-        Route::delete('{workspace}', [WorkspaceController::class, 'destroy'])->name('workspaces.destroy');
+        Route::delete('{workspace:uuid}', [WorkspaceController::class, 'destroy'])->name('workspaces.destroy');
     });
 
     Route::prefix('workspace-members')->group(function () {
