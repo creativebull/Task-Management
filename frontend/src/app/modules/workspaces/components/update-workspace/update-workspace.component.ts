@@ -43,7 +43,7 @@ export class UpdateWorkspaceComponent implements OnInit {
     });
   }
 
-  workspaceUpdated() {
+  workspaceUpdated(event: Workspace) {
     this.workspaceService.refreshWorkspaceList();
     this.toastr.success('Workspace updated successfully');
     this.router.navigate(['/workspaces']);

@@ -1,44 +1,23 @@
 <app-main-header [header]="'Tasks'" [breadCrumbs]="breadCrumbs"></app-main-header>
 
-<div class="row tasks-list-container">
-  <div class="col-md-3 task-list">
 
-    <h4 class="h4">Triage</h4>
+<div class="row">
+  <div class="col task-list-col" *ngFor="let taskList of taskLists">
 
-    <div class="items1 border p-1 " [sortablejs]="items1" [sortablejsOptions]="options">
-      <div *ngFor="let item of items1">
-        <div class="card mb-2">
+    <div class="task-list-inner-col">
 
-          <div class="card-body">
-            {{ item }}
+      <p><b>{{taskList.name}}</b></p>
+      <div [sortablejs]="taskList.tasks" [sortablejsOptions]="options">
+        <div *ngFor="let task of taskList.tasks">
+          <div class="card mb-1 task-card">
+            <div class="card-body">
+              {{task.name}}
+            </div>
           </div>
         </div>
       </div>
     </div>
-
   </div>
-  <div class="col-md-3 task-list">
-
-    <h4 class="h4">TODO</h4>
-
-    <div class="items2 border p-1" [sortablejs]="items2" [sortablejsOptions]="options">
-      <div *ngFor="let item of items2">
-        <div class="card mb-2">
-
-          <div class="card-body">
-            {{ item }}
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-  <div class="col-md-3"></div>
-  <div class="col-md-3"></div>
 </div>
 
-
-<!--<h3>list 1</h3>-->
-
-<!--<h3>list 2</h3>-->
 

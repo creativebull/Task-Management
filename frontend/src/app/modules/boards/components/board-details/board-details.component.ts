@@ -26,11 +26,46 @@ export class BoardDetailsComponent implements OnInit {
   activeWorkspace: any;
   boardUuid!: string;
 
-  items1 = [1, 2, 3, 4, 5]; // TODO testing only
-  items2 = ['a', 'b', 'c', 'd', 'e']; // TODO testing only
+  taskLists = [
+    {
+      'name': 'Triage', tasks: this.createRandomTasks(Math.floor(Math.random() * 11))
+    },
+    {
+      'name': 'TODO', tasks: this.createRandomTasks(Math.floor(Math.random() * 11))
+    },
+    {
+      'name': 'Blocked', tasks: this.createRandomTasks(Math.floor(Math.random() * 11))
+    },
+    {
+      'name': 'TODO', tasks: this.createRandomTasks(Math.floor(Math.random() * 11))
+    },
+    {
+      'name': 'In Progress', tasks: this.createRandomTasks(Math.floor(Math.random() * 11))
+    }
+  ];
+
+  createRandomTasks(count: number) {
+    const tasks = [];
+    for (let i = 0; i < count; i++) {
+      tasks.push({
+        'name': 'Task ' + (i + 1),
+        'description': 'Task ' + (i + 1) + ' description',
+        'status': 'todo',
+        'assignedTo': 'John Doe'
+      });
+    }
+    return tasks;
+  }
 
   options: SortableOptions = {
-    group: 'test'
+    group: 'tasks',
+    onUpdate: (event: any) => {
+      console.log(event);
+    },
+    onAdd: (event: any) => {
+      console.log('Add');
+      console.log(event);
+    }
   };
 
   breadCrumbs: Breadcrumb[] = [
