@@ -1,16 +1,17 @@
-.task-list-col {
-
-}
-
 .task-list-inner-col {
   background-color: #ebecf0;
   border-radius: 5px;
   padding: 2% 2% 4%;
   width: 100%;
+  min-height: 50px;
 }
 
 .task-card {
   -webkit-box-shadow: 3px 3px 2px 0 rgba(163, 163, 163, 1);
   -moz-box-shadow: 3px 3px 2px 0 rgba(163, 163, 163, 1);
   box-shadow: 3px 3px 2px 0 rgba(163, 163, 163, 1);
+}
+
+.grab-handle {
+  cursor: grab;
 }

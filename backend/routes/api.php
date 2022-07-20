@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BoardController;
+use App\Http\Controllers\BoardListController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\WorkspaceController;
 use App\Http\Controllers\WorkspaceMembersController;
@@ -41,7 +42,8 @@ Route::middleware(['auth:api'])->group(function () {
         Route::put('{workspace:uuid}/{board:uuid}', [BoardController::class, 'update'])->name('boards.update');
         Route::delete('{workspace:uuid}/{board:uuid}', [BoardController::class, 'destroy'])->name('boards.destroy');
 
-        Route::get('{workspace:uuid}/{board:uuid}/tasks', [TaskController::class, 'index'])->name('tasks.index');
+        Route::get('{workspace:uuid}/{board:uuid}/lists', [BoardListController::class, 'listsForBoard'])->name('boards.lists');
+        Route::post('{workspace:uuid}/{board:uuid}/lists', [BoardListController::class, 'store'])->name('boards.lists');
     });
 
     Route::prefix('workspaces')->group(function () {

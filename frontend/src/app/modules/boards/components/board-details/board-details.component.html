@@ -7,10 +7,11 @@
     <div class="task-list-inner-col">
 
       <p><b>{{taskList.name}}</b></p>
-      <div [sortablejs]="taskList.tasks" [sortablejsOptions]="options">
+      <div [sortablejs]="taskList.tasks" [sortablejsOptions]="options" style="min-height: 10px;">
         <div *ngFor="let task of taskList.tasks">
           <div class="card mb-1 task-card">
             <div class="card-body">
+              <span class="grab-handle fa fa-grip-lines"></span>
               {{task.name}}
             </div>
           </div>

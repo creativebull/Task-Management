@@ -26,21 +26,23 @@ export class BoardDetailsComponent implements OnInit {
   activeWorkspace: any;
   boardUuid!: string;
 
+  maxItems = 30;
+
   taskLists = [
     {
-      'name': 'Triage', tasks: this.createRandomTasks(Math.floor(Math.random() * 11))
+      'name': 'Triage', tasks: this.createRandomTasks(Math.floor(Math.random() * this.maxItems))
     },
     {
-      'name': 'TODO', tasks: this.createRandomTasks(Math.floor(Math.random() * 11))
+      'name': 'TODO', tasks: this.createRandomTasks(Math.floor(Math.random() * this.maxItems))
     },
     {
-      'name': 'Blocked', tasks: this.createRandomTasks(Math.floor(Math.random() * 11))
+      'name': 'Blocked', tasks: this.createRandomTasks(Math.floor(Math.random() * this.maxItems))
     },
     {
-      'name': 'TODO', tasks: this.createRandomTasks(Math.floor(Math.random() * 11))
+      'name': 'TODO', tasks: this.createRandomTasks(Math.floor(Math.random() * this.maxItems))
     },
     {
-      'name': 'In Progress', tasks: this.createRandomTasks(Math.floor(Math.random() * 11))
+      'name': 'In Progress', tasks: this.createRandomTasks(Math.floor(Math.random() * this.maxItems))
     }
   ];
 
@@ -48,7 +50,7 @@ export class BoardDetailsComponent implements OnInit {
     const tasks = [];
     for (let i = 0; i < count; i++) {
       tasks.push({
-        'name': 'Task ' + (i + 1),
+        'name': 'Task with a longer name, This is just to give the task a longer name, Is it working?' + (i + 1),
         'description': 'Task ' + (i + 1) + ' description',
         'status': 'todo',
         'assignedTo': 'John Doe'
@@ -59,13 +61,17 @@ export class BoardDetailsComponent implements OnInit {
 
   options: SortableOptions = {
     group: 'tasks',
-    onUpdate: (event: any) => {
+    onEnd: (event: any) => {
       console.log(event);
+      var itemEl = event.item;  // dragged HTMLElement
+      console.log(itemEl);
+      console.log(itemEl.to);
+      console.log(itemEl.from);
     },
-    onAdd: (event: any) => {
-      console.log('Add');
-      console.log(event);
-    }
+    // onSort: (event: any) => {
+    //   console.log(event);
+    // },
+    handle: '.grab-handle'
   };
 
   breadCrumbs: Breadcrumb[] = [

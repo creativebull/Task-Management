@@ -14,13 +14,11 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return AnonymousResourceCollection
+     * @return JsonResponse
      */
-    public function index(): AnonymousResourceCollection
+    public function index(): JsonResponse
     {
-        $tasks = Task::query()->where('user_id', auth()->user()->id)->get();
-
-        return TaskResource::collection($tasks);
+        return response()->json();
     }
 
     /**

@@ -70,8 +70,23 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Task::class);
     }
 
+    /**
+     * @return HasMany
+     */
     public function boards(): HasMany
     {
         return $this->hasMany(Board::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function workspaces(): HasMany
+    {
+        return $this->hasMany(Workspace::class);
+    }
+
+    public function workspaceMembers() {
+        return $this->hasMany(WorkspaceMembers::class);
     }
 }

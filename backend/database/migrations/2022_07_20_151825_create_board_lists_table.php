@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Task;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,15 +12,12 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('tasks', static function (Blueprint $table) {
+        Schema::create('board_lists', static function (Blueprint $table) {
             $table->id();
             $table->uuid();
-            $table->unsignedBigInteger('board_list_id');
-            $table->string('identifier')->unique();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('board_id');
             $table->string('name');
-            $table->text('description')->nullable();
-            $table->enum('status', Task::statuses())->default(Task::TODO);
+            $table->unsignedBigInteger('position')->default(0);
             $table->timestamps();
         });
     }
@@ -33,6 +29,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('tasks');
+        Schema::dropIfExists('board_lists');
     }
 };
