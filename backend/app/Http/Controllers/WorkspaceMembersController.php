@@ -59,7 +59,8 @@ class WorkspaceMembersController extends Controller
     {
         $workspaceMembers = WorkspaceMembers::query()
             ->where('user_id', '=', auth()->user()->id)
-            ->where('workspace_id', '=', $workspace->id)->get();
+            ->where('workspace_id', '=', $workspace->id)
+            ->get();
 
         return WorkspaceCollection::collection($workspaceMembers);
     }

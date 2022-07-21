@@ -7,6 +7,7 @@ import {LaravelErrorExtractorService} from '../../../../services/laravel-error-e
 import {ToastrService} from 'ngx-toastr';
 import {SortableOptions} from 'sortablejs';
 import {Breadcrumb} from '../../../../interfaces/breadcrumb';
+import {BoardListService} from '../../../../services/board-list.service';
 
 @UntilDestroy()
 @Component({
@@ -20,7 +21,9 @@ export class BoardDetailsComponent implements OnInit {
     private workspaceService: WorkspaceService,
     private route: ActivatedRoute,
     private taskService: TasksService,
-    private toastrService: ToastrService) {
+    private toastrService: ToastrService,
+    private boardListService: BoardListService
+  ) {
   }
 
   activeWorkspace: any;
@@ -45,19 +48,6 @@ export class BoardDetailsComponent implements OnInit {
       'name': 'In Progress', tasks: this.createRandomTasks(Math.floor(Math.random() * this.maxItems))
     }
   ];
-
-  createRandomTasks(count: number) {
-    const tasks = [];
-    for (let i = 0; i < count; i++) {
-      tasks.push({
-        'name': 'Task with a longer name, This is just to give the task a longer name, Is it working?' + (i + 1),
-        'description': 'Task ' + (i + 1) + ' description',
-        'status': 'todo',
-        'assignedTo': 'John Doe'
-      });
-    }
-    return tasks;
-  }
 
   options: SortableOptions = {
     group: 'tasks',
@@ -85,29 +75,31 @@ export class BoardDetailsComponent implements OnInit {
         this.activeWorkspace = workspace;
         this.route.params.subscribe(params => {
           this.boardUuid = params['uuid'];
-          this.loadBoardTasks();
+          this.loadBoardListsAndTasks();
         })
       }
     );
   }
 
-  loadBoardTasks() {
-    this.taskService.loadTasksForBoard(this.activeWorkspace.uuid, this.boardUuid).pipe(untilDestroyed(this)).subscribe({
-      next: tasks => {
-        console.log(tasks);
-      },
-      error: err => {
-        const errorMessages = LaravelErrorExtractorService.extractErrorMessagesFromErrorResponse(err);
-        console.error(errorMessages);
-        if (errorMessages.length > 0) {
-          for (let errorMessage of errorMessages) {
-            this.toastrService.error(errorMessage);
-          }
-        } else {
-          this.toastrService.error('Something went wrong');
-        }
+  loadBoardListsAndTasks() {
+    this.boardListService.getBoardListsWithTasks(this.activeWorkspace.uuid, this.boardUuid).pipe(untilDestroyed(this)).subscribe({
+      next: (boardLists) => {
+        console.log(boardLists);
       }
-    });
+    })
+  }
+
+  createRandomTasks(count: number) {
+    const tasks = [];
+    for (let i = 0; i < count; i++) {
+      tasks.push({
+        'name': 'Task with a longer name, This is just to give the task a longer name, Is it working?' + (i + 1),
+        'description': 'Task ' + (i + 1) + ' description',
+        'status': 'todo',
+        'assignedTo': 'John Doe'
+      });
+    }
+    return tasks;
   }
 
 }

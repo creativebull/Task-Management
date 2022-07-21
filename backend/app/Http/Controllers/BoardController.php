@@ -140,7 +140,7 @@ class BoardController extends Controller
 
         $board->delete();
 
-        // TODO here we will need to delete all tasks that are found underneath the board
+        // TODO Delete all board lists and tasks inside those board lists
 
         return response()->json(null, 204);
     }

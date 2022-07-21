@@ -21,7 +21,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('user_id');
             $table->string('name');
             $table->text('description')->nullable();
-            $table->enum('status', Task::statuses())->default(Task::TODO);
+            $table->integer('position')->default(0);
             $table->timestamps();
         });
     }

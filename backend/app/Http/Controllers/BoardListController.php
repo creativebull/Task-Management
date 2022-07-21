@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Core\Services\Workspace\WorkspacePermissionService;
 use App\Http\Requests\StoreBoardListRequest;
 use App\Http\Requests\UpdateBoardListRequest;
+use App\Http\Resources\BoardLists\BoardListWithTasksCollection;
 use App\Http\Resources\BoardLists\BoardListWithTasksResource;
 use App\Models\Board;
 use App\Models\BoardList;
@@ -28,9 +29,13 @@ class BoardListController extends Controller
         }
 
         // Get the board lists with tasks
-        $boardLists = BoardList::query()->with('tasks')->where('board_id', '=', $board->id)->get();
+        $boardLists = BoardList::query()
+            ->with('tasks')
+            ->where('board_id', '=', $board->id)
+            ->orderBy('position', 'asc')
+            ->get();
 
-        return response()->json(new BoardListWithTasksResource($boardLists));
+        return response()->json(BoardListWithTasksResource::collection($boardLists));
     }
 
     /**
