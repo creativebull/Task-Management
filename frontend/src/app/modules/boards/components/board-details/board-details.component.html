@@ -2,7 +2,7 @@
 
 
 <div class="row">
-  <div class="col task-list-col" *ngFor="let taskList of taskLists">
+  <div class="col task-list-col" *ngFor="let taskList of boardLists">
 
     <div class="task-list-inner-col">
 
@@ -18,9 +18,8 @@
         </div>
       </div>
 
-      <a href="#" (click)="addTaskClick(taskList.uuid)" data-bs-toggle="modal" data-bs-target="#newTaskModal">+ Add New
-        Task</a>
-
+      <a href="#" (click)="addTaskClick(taskList.uuid)" data-bs-toggle="modal" data-bs-target="#newTaskModal">
+        + Add New Task</a>
     </div>
   </div>
 </div>
@@ -48,16 +47,19 @@
           </div>
           <div class="mb-3">
             <label for="taskAssignedUser" class="form-label">Assigned</label>
-            <select class="form-control" id="taskAssignedUser" formControlName="assignedTo">
+            <select class="form-control" id="taskAssignedUser" formControlName="assigned_to">
               <option>Current User</option>
               <option *ngFor="let member of workspaceMembers" [value]="member.uuid">{{member.name}}</option>
             </select>
           </div>
+
+          <button type="submit" class="btn btn-success" [disabled]="savingNewTask">
+            <spinner [show]="savingNewTask"></spinner> Save
+          </button>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-success">Save</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" #closeNewTaskModalBtn>Close</button>
       </div>
     </div>
   </div>

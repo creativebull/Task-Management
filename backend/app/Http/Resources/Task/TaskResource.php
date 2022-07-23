@@ -2,25 +2,25 @@
 
 namespace App\Http\Resources\Task;
 
-use Illuminate\Contracts\Support\Arrayable;
+use App\Http\Resources\User\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use JsonSerializable;
 
 class TaskResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  Request  $request
+     * @param Request $request
      * @return array
      */
     public function toArray($request): array
     {
         return [
             'uuid' => $this->uuid,
-            'identifier' => $this->identifier,
             'name' => $this->name,
+            'user' => new UserResource($this->user),
+            'assigned_to' => $this->assigned_to ?? new UserResource($this->assigned_to),
             'description' => $this->description,
             'position' => $this->position,
             'created_at' => $this->created_at,

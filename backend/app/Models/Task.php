@@ -19,9 +19,10 @@ class Task extends Model
     protected $fillable = [
         'identifier',
         'user_id',
+        'assigned_to',
+        'board_list_id',
         'name',
         'description',
-        'status',
     ];
 
     public static function statuses(): array
@@ -45,8 +46,8 @@ class Task extends Model
     /**
      * @return BelongsTo
      */
-    public function workspace(): BelongsTo
+    public function boardList(): BelongsTo
     {
-        return $this->belongsTo(Workspace::class);
+        return $this->belongsTo(BoardList::class);
     }
 }

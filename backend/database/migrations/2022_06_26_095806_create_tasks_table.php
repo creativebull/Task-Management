@@ -17,8 +17,8 @@ return new class extends Migration {
             $table->id();
             $table->uuid();
             $table->unsignedBigInteger('board_list_id');
-            $table->string('identifier')->unique();
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('assigned_to');
             $table->string('name');
             $table->text('description')->nullable();
             $table->integer('position')->default(0);

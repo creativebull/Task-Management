@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Core\Services\TaskAddService;
+use App\Exceptions\WorkspaceException;
 use App\Http\Requests\Tasks\StoreTaskRequest;
 use App\Http\Requests\Tasks\UpdateTaskRequest;
 use App\Http\Resources\Task\TaskResource;
+use App\Models\Board;
+use App\Models\BoardList;
 use App\Models\Task;
+use App\Models\Workspace;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Throwable;
 
 class TaskController extends Controller
 {
@@ -25,12 +30,16 @@ class TaskController extends Controller
      * Store a newly created resource in storage.
      *
      * @param StoreTaskRequest $request
+     * @param Workspace $workspace
+     * @param Board $board
+     * @param BoardList $boardList
      * @return JsonResponse
+     * @throws WorkspaceException
+     * @throws Throwable
      */
-    public function store(StoreTaskRequest $request): JsonResponse
+    public function store(StoreTaskRequest $request, Workspace $workspace, Board $board, BoardList $boardList): JsonResponse
     {
-        $task = Task::query()->create($request->validated());
-
+        $task = (new TaskAddService())->addNewTask($request, $workspace, $board, $boardList);
         return response()->json(new TaskResource($task), 201);
     }
 

@@ -6,4 +6,5 @@ return [
     'cannot_invite_owner' => 'You cannot invite yourself to a workspace.',
     'invalid_user' => 'The user you are trying to invite does not match the invite.',
     'duplicate_workspace' => 'There is already a workspace with this name.',
+    'no_access' => 'You dont have access to this workspace',
 ];

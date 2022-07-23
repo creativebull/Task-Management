@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\BoardListController;
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\WorkspaceController;
 use App\Http\Controllers\WorkspaceMembersController;
 use Illuminate\Support\Facades\Route;
@@ -45,6 +46,12 @@ Route::middleware(['auth:api'])->group(function () {
 
                 Route::get('lists', [BoardListController::class, 'listsForBoard'])->name('boards.lists');
                 Route::post('lists', [BoardListController::class, 'store'])->name('boards.lists');
+
+                Route::post('lists/{list:uuid}/move', [BoardListController::class, 'move'])->name('boards.lists.move');
+                Route::delete('lists/{list:uuid}', [BoardListController::class, 'destroy'])->name('boards.lists.destroy');
+                Route::put('lists/{list:uuid}', [BoardListController::class, 'update'])->name('boards.lists.update');
+
+                Route::post('{boardList:uuid}/tasks', [TaskController::class, 'store'])->name('boards.lists.tasks.store');
             });
         });
     });

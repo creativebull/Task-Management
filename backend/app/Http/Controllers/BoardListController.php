@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Core\Services\BoardList\BoardListDeleteService;
+use App\Core\Services\BoardList\BoardListUpdateService;
 use App\Core\Services\Workspace\WorkspacePermissionService;
+use App\Exceptions\WorkspaceException;
 use App\Http\Requests\StoreBoardListRequest;
 use App\Http\Requests\UpdateBoardListRequest;
 use App\Http\Resources\BoardLists\BoardListWithTasksCollection;
@@ -85,22 +88,31 @@ class BoardListController extends Controller
      * Update the specified resource in storage.
      *
      * @param UpdateBoardListRequest $request
+     * @param Workspace $workspace
+     * @param Board $board
      * @param BoardList $boardList
      * @return Response
+     * @throws Throwable
+     * @throws WorkspaceException
      */
-    public function update(UpdateBoardListRequest $request, BoardList $boardList)
+    public function update(UpdateBoardListRequest $request, Workspace $workspace, Board $board, BoardList $boardList)
     {
-        //
+        (new BoardListUpdateService())->updateBoardList($workspace, $board, $boardList, $request->validated());
     }
 
     /**
      * Remove the specified resource from storage.
      *
+     * @param Workspace $workspace
+     * @param Board $board
      * @param BoardList $boardList
-     * @return Response
+     * @return JsonResponse
+     * @throws WorkspaceException
      */
-    public function destroy(BoardList $boardList)
+    public function destroy(Workspace $workspace, Board $board, BoardList $boardList): JsonResponse
     {
-        //
+        (new BoardListDeleteService())->deleteBoardList($workspace, $board, $boardList);
+
+        return response()->json(['success' => true]);
     }
 }

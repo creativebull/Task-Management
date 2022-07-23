@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {WorkspaceService} from '../../../../services/workspace.service';
 import {ActivatedRoute} from '@angular/router';
 import {TasksService} from '../../../../services/tasks.service';
@@ -9,6 +9,7 @@ import {Breadcrumb} from '../../../../interfaces/breadcrumb';
 import {BoardListService} from '../../../../services/board-list.service';
 import {WorkspaceMembersService} from '../../../../services/workspace-members.service';
 import {FormControl, FormGroup} from '@angular/forms';
+import {BoardList} from '../../../../interfaces/board-list';
 
 @UntilDestroy()
 @Component({
@@ -17,8 +18,9 @@ import {FormControl, FormGroup} from '@angular/forms';
   styleUrls: ['./board-details.component.scss']
 })
 export class BoardDetailsComponent implements OnInit {
-  activeListUuId?: string;
+  activeListUuId!: string;
   workspaceMembers?: any; // TODO add an interface for this
+  savingNewTask = false;
 
   constructor(
     private workspaceService: WorkspaceService,
@@ -33,39 +35,7 @@ export class BoardDetailsComponent implements OnInit {
   activeWorkspace: any;
   boardUuid!: string;
 
-  maxItems = 30;
-
-  taskLists = [
-    {
-      'name': 'Triage',
-      tasks: this.createRandomTasks(Math.floor(Math.random() * this.maxItems)),
-      'uuid': this.generateRandomString(),
-    },
-    {
-      'name': 'TODO',
-      tasks: this.createRandomTasks(Math.floor(Math.random() * this.maxItems)),
-      'uuid': this.generateRandomString(),
-    },
-    {
-      'name': 'Blocked',
-      tasks: this.createRandomTasks(Math.floor(Math.random() * this.maxItems)),
-      'uuid': this.generateRandomString(),
-    },
-    {
-      'name': 'TODO',
-      tasks: this.createRandomTasks(Math.floor(Math.random() * this.maxItems)),
-      'uuid': this.generateRandomString(),
-    },
-    {
-      'name': 'In Progress',
-      tasks: this.createRandomTasks(Math.floor(Math.random() * this.maxItems)),
-      'uuid': this.generateRandomString(),
-    }
-  ];
-
-  generateRandomString() {
-    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-  }
+  boardLists: BoardList[] = [];
 
   options: SortableOptions = {
     group: 'tasks',
@@ -90,6 +60,8 @@ export class BoardDetailsComponent implements OnInit {
   loadingNewTaskForm = true;
   newTaskForm!: FormGroup;
 
+  @ViewChild('closeNewTaskModalBtn') closeNewTaskModalBtn!: ElementRef
+
   ngOnInit(): void {
     this.workspaceService.activeWorkspace?.subscribe(workspace => {
         this.activeWorkspace = workspace;
@@ -105,22 +77,9 @@ export class BoardDetailsComponent implements OnInit {
   loadBoardListsAndTasks() {
     this.boardListService.getBoardListsWithTasks(this.activeWorkspace.uuid, this.boardUuid).pipe(untilDestroyed(this)).subscribe({
       next: (boardLists) => {
-        console.log(boardLists);
+        this.boardLists = boardLists;
       }
     })
-  }
-
-  createRandomTasks(count: number) {
-    const tasks = [];
-    for (let i = 0; i < count; i++) {
-      tasks.push({
-        'name': 'Task with a longer name, This is just to give the task a longer name, Is it working?' + (i + 1),
-        'description': 'Task ' + (i + 1) + ' description',
-        'status': 'todo',
-        'assignedTo': 'John Doe'
-      });
-    }
-    return tasks;
   }
 
   addTaskClick(uuid: string) {
@@ -133,7 +92,7 @@ export class BoardDetailsComponent implements OnInit {
     this.newTaskForm = new FormGroup({
       name: new FormControl(''),
       description: new FormControl(''),
-      assignedTo: new FormControl('')
+      assigned_to: new FormControl('')
     });
 
     this.loadingNewTaskForm = false;
@@ -148,6 +107,14 @@ export class BoardDetailsComponent implements OnInit {
   }
 
   submitNewTask() {
-
+    this.savingNewTask = true;
+    this.taskService.createTask(this.activeWorkspace.uuid, this.boardUuid, this.activeListUuId, this.newTaskForm.value).pipe(untilDestroyed(this)).subscribe({
+      next: (task) => {
+        this.toastrService.success('Task created successfully');
+        this.loadBoardListsAndTasks();
+        this.closeNewTaskModalBtn.nativeElement.click();
+        this.savingNewTask = false;
+      }
+    });
   }
 }
