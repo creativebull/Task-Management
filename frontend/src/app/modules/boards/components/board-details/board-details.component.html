@@ -1,5 +1,12 @@
 <app-main-header [header]="'Tasks'" [breadCrumbs]="breadCrumbs"></app-main-header>
 
+<div class="row mb-4">
+  <div class="col-12 text-end">
+    <a (click)="addNewListClick()" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#newBoardListModal">
+      + Add List
+    </a>
+  </div>
+</div>
 
 <div class="row">
   <div class="col task-list-col" *ngFor="let taskList of boardLists">
@@ -24,8 +31,7 @@
   </div>
 </div>
 
-
-<!-- Modal -->
+<!-- Add Task Modal -->
 <div class="modal fade" id="newTaskModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -64,3 +70,25 @@
     </div>
   </div>
 </div>
+<!-- End Add Task Modal -->
+
+<!-- Add board list modal -->
+<div class="modal fade" id="newBoardListModal" tabindex="-1" aria-labelledby="newBoardListModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="newBoardListModalLabel">New Task</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        New board list Modal
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" #closeNewTaskListModalBtn>
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Add board list modal -->

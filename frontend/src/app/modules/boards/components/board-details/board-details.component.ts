@@ -20,7 +20,6 @@ import {BoardList} from '../../../../interfaces/board-list';
 export class BoardDetailsComponent implements OnInit {
   activeListUuId!: string;
   workspaceMembers?: any; // TODO add an interface for this
-  savingNewTask = false;
 
   constructor(
     private workspaceService: WorkspaceService,
@@ -59,6 +58,11 @@ export class BoardDetailsComponent implements OnInit {
   ];
   loadingNewTaskForm = true;
   newTaskForm!: FormGroup;
+  savingNewTask = false;
+
+  newListForm!: FormGroup;
+  loadingNewListForm = true;
+  savingNewList = false;
 
   @ViewChild('closeNewTaskModalBtn') closeNewTaskModalBtn!: ElementRef
 
@@ -117,4 +121,16 @@ export class BoardDetailsComponent implements OnInit {
       }
     });
   }
+
+  addNewListClick() {
+    this.initNewListForm();
+  }
+
+  initNewListForm() {
+    this.loadingNewListForm = true;
+    this.newListForm = new FormGroup({
+      name: new FormControl('')
+    });
+  }
 }
+
