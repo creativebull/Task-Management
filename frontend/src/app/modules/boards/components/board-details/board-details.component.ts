@@ -3,11 +3,12 @@ import {WorkspaceService} from '../../../../services/workspace.service';
 import {ActivatedRoute} from '@angular/router';
 import {TasksService} from '../../../../services/tasks.service';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {LaravelErrorExtractorService} from '../../../../services/laravel-error-extractor.service';
 import {ToastrService} from 'ngx-toastr';
 import {SortableOptions} from 'sortablejs';
 import {Breadcrumb} from '../../../../interfaces/breadcrumb';
 import {BoardListService} from '../../../../services/board-list.service';
+import {WorkspaceMembersService} from '../../../../services/workspace-members.service';
+import {FormControl, FormGroup} from '@angular/forms';
 
 @UntilDestroy()
 @Component({
@@ -16,13 +17,16 @@ import {BoardListService} from '../../../../services/board-list.service';
   styleUrls: ['./board-details.component.scss']
 })
 export class BoardDetailsComponent implements OnInit {
+  activeListUuId?: string;
+  workspaceMembers?: any; // TODO add an interface for this
 
   constructor(
     private workspaceService: WorkspaceService,
     private route: ActivatedRoute,
     private taskService: TasksService,
     private toastrService: ToastrService,
-    private boardListService: BoardListService
+    private boardListService: BoardListService,
+    private workspaceMembersService: WorkspaceMembersService
   ) {
   }
 
@@ -33,21 +37,35 @@ export class BoardDetailsComponent implements OnInit {
 
   taskLists = [
     {
-      'name': 'Triage', tasks: this.createRandomTasks(Math.floor(Math.random() * this.maxItems))
+      'name': 'Triage',
+      tasks: this.createRandomTasks(Math.floor(Math.random() * this.maxItems)),
+      'uuid': this.generateRandomString(),
     },
     {
-      'name': 'TODO', tasks: this.createRandomTasks(Math.floor(Math.random() * this.maxItems))
+      'name': 'TODO',
+      tasks: this.createRandomTasks(Math.floor(Math.random() * this.maxItems)),
+      'uuid': this.generateRandomString(),
     },
     {
-      'name': 'Blocked', tasks: this.createRandomTasks(Math.floor(Math.random() * this.maxItems))
+      'name': 'Blocked',
+      tasks: this.createRandomTasks(Math.floor(Math.random() * this.maxItems)),
+      'uuid': this.generateRandomString(),
     },
     {
-      'name': 'TODO', tasks: this.createRandomTasks(Math.floor(Math.random() * this.maxItems))
+      'name': 'TODO',
+      tasks: this.createRandomTasks(Math.floor(Math.random() * this.maxItems)),
+      'uuid': this.generateRandomString(),
     },
     {
-      'name': 'In Progress', tasks: this.createRandomTasks(Math.floor(Math.random() * this.maxItems))
+      'name': 'In Progress',
+      tasks: this.createRandomTasks(Math.floor(Math.random() * this.maxItems)),
+      'uuid': this.generateRandomString(),
     }
   ];
+
+  generateRandomString() {
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  }
 
   options: SortableOptions = {
     group: 'tasks',
@@ -69,6 +87,8 @@ export class BoardDetailsComponent implements OnInit {
     {linkText: 'Boards', routeItems: ['/boards']},
     {linkText: 'Tasks', routeItems: []}
   ];
+  loadingNewTaskForm = true;
+  newTaskForm!: FormGroup;
 
   ngOnInit(): void {
     this.workspaceService.activeWorkspace?.subscribe(workspace => {
@@ -76,6 +96,7 @@ export class BoardDetailsComponent implements OnInit {
         this.route.params.subscribe(params => {
           this.boardUuid = params['uuid'];
           this.loadBoardListsAndTasks();
+          this.loadWorkspaceMembers();
         })
       }
     );
@@ -102,4 +123,31 @@ export class BoardDetailsComponent implements OnInit {
     return tasks;
   }
 
+  addTaskClick(uuid: string) {
+    this.activeListUuId = uuid;
+    this.initNewTaskForm();
+  }
+
+  initNewTaskForm() {
+    this.loadingNewTaskForm = true;
+    this.newTaskForm = new FormGroup({
+      name: new FormControl(''),
+      description: new FormControl(''),
+      assignedTo: new FormControl('')
+    });
+
+    this.loadingNewTaskForm = false;
+  }
+
+  loadWorkspaceMembers() {
+    this.workspaceMembersService.getWorkspaceMembers(this.activeWorkspace.uuid).pipe(untilDestroyed(this)).subscribe({
+      next: (members) => {
+        this.workspaceMembers = members;
+      }
+    });
+  }
+
+  submitNewTask() {
+
+  }
 }

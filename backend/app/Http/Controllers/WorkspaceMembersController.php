@@ -10,13 +10,12 @@ use App\Exceptions\WorkspaceException;
 use App\Http\Requests\WorkspaceMembers\StoreWorkspaceMembersRequest;
 use App\Http\Requests\WorkspaceMembers\UpdateWorkspaceMembersRequest;
 use App\Http\Requests\WorkspaceMembers\WorkspaceMemberInviteRequest;
-use App\Http\Resources\Workspace\WorkspaceCollection;
+use App\Http\Resources\WorkspaceMember\WorkspaceMemberResource;
 use App\Models\Workspace;
 use App\Models\WorkspaceInvite;
 use App\Models\WorkspaceMembers;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Throwable;
 
@@ -43,6 +42,7 @@ class WorkspaceMembersController extends Controller
     /**
      * @throws UserException
      * @throws WorkspaceException
+     * @throws Throwable
      */
     public function accept(WorkspaceInvite $workspaceInvite): JsonResponse
     {
@@ -53,16 +53,15 @@ class WorkspaceMembersController extends Controller
      * Display a listing of the resource.
      *
      * @param Workspace $workspace
-     * @return AnonymousResourceCollection
+     * @return JsonResponse
      */
-    public function index(Workspace $workspace): AnonymousResourceCollection
+    public function index(Workspace $workspace): JsonResponse
     {
         $workspaceMembers = WorkspaceMembers::query()
-            ->where('user_id', '=', auth()->user()->id)
             ->where('workspace_id', '=', $workspace->id)
             ->get();
 
-        return WorkspaceCollection::collection($workspaceMembers);
+        return response()->json(WorkspaceMemberResource::collection($workspaceMembers));
     }
 
     /**

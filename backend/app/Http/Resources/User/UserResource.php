@@ -21,10 +21,10 @@ class UserResource extends JsonResource
     public function toArray($request): array
     {
         return [
-            'id' => $this->id,
+            'uuid' => $this->uuid,
             'name' => $this->name,
             'email' => $this->email,
-            'email_verified_at' => $this->email_verified_at->format(Date::STANDARD_DATE_FORMAT),
+            'email_verified_at' => $this->email_verified_at ? $this->email_verified_at->format(Date::STANDARD_DATE_FORMAT) : '',
             'avatar' => $this->avatar,
             'created_at' => Date::toUserTime($this->created_at),
             'updated_at' => Date::toUserTime($this->updated_at),

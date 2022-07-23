@@ -3,10 +3,8 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\BoardListController;
-use App\Http\Controllers\TaskController;
 use App\Http\Controllers\WorkspaceController;
 use App\Http\Controllers\WorkspaceMembersController;
-use App\Models\Workspace;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,14 +34,19 @@ Route::middleware(['auth:api'])->group(function () {
     });
 
     Route::prefix('boards')->group(function () {
-        Route::get('{workspace:uuid}', [BoardController::class, 'index'])->name('boards.index');
-        Route::post('{workspace:uuid}', [BoardController::class, 'store'])->name('boards.store');
-        Route::get('{workspace:uuid}/{board:uuid}', [BoardController::class, 'show'])->name('boards.show');
-        Route::put('{workspace:uuid}/{board:uuid}', [BoardController::class, 'update'])->name('boards.update');
-        Route::delete('{workspace:uuid}/{board:uuid}', [BoardController::class, 'destroy'])->name('boards.destroy');
+        Route::prefix('{workspace:uuid}')->group(function () {
+            Route::get('', [BoardController::class, 'index'])->name('boards.index');
+            Route::post('', [BoardController::class, 'store'])->name('boards.store');
 
-        Route::get('{workspace:uuid}/{board:uuid}/lists', [BoardListController::class, 'listsForBoard'])->name('boards.lists');
-        Route::post('{workspace:uuid}/{board:uuid}/lists', [BoardListController::class, 'store'])->name('boards.lists');
+            Route::prefix('{board:uuid}')->group(function () {
+                Route::get('', [BoardController::class, 'show'])->name('boards.show');
+                Route::put('', [BoardController::class, 'update'])->name('boards.update');
+                Route::delete('', [BoardController::class, 'destroy'])->name('boards.destroy');
+
+                Route::get('lists', [BoardListController::class, 'listsForBoard'])->name('boards.lists');
+                Route::post('lists', [BoardListController::class, 'store'])->name('boards.lists');
+            });
+        });
     });
 
     Route::prefix('workspaces')->group(function () {
@@ -52,6 +55,8 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('{workspace:uuid}', [WorkspaceController::class, 'show'])->name('workspaces.show');
         Route::put('{workspace:uuid}', [WorkspaceController::class, 'update'])->name('workspaces.update');
         Route::delete('{workspace:uuid}', [WorkspaceController::class, 'destroy'])->name('workspaces.destroy');
+
+        Route::get('{workspace:uuid}/members', [WorkspaceMembersController::class, 'index'])->name('workspace-members.index');
     });
 
     Route::prefix('workspace-members')->group(function () {
