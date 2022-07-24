@@ -44,12 +44,12 @@ Route::middleware(['auth:api'])->group(function () {
                 Route::put('', [BoardController::class, 'update'])->name('boards.update');
                 Route::delete('', [BoardController::class, 'destroy'])->name('boards.destroy');
 
-                Route::get('lists', [BoardListController::class, 'listsForBoard'])->name('boards.lists');
-                Route::post('lists', [BoardListController::class, 'store'])->name('boards.lists');
-
-                Route::post('lists/{list:uuid}/move', [BoardListController::class, 'move'])->name('boards.lists.move');
-                Route::delete('lists/{list:uuid}', [BoardListController::class, 'destroy'])->name('boards.lists.destroy');
-                Route::put('lists/{list:uuid}', [BoardListController::class, 'update'])->name('boards.lists.update');
+                Route::get('boardLists', [BoardListController::class, 'listsForBoard'])->name('boards.lists');
+                Route::post('boardLists', [BoardListController::class, 'store'])->name('boards.lists');
+                Route::post('boardLists/{boardList:uuid}/move', [BoardListController::class, 'move'])->name('boards.lists.move');
+                Route::post('boardLists/{boardList:uuid}/reorder', [BoardListController::class, 'reorder'])->name('boards.lists.reorder');
+                Route::delete('boardLists/{boardList:uuid}', [BoardListController::class, 'destroy'])->name('boards.lists.destroy');
+                Route::put('boardLists/{boardList:uuid}', [BoardListController::class, 'update'])->name('boards.lists.update');
 
                 Route::post('{boardList:uuid}/tasks', [TaskController::class, 'store'])->name('boards.lists.tasks.store');
             });

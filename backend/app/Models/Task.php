@@ -23,6 +23,7 @@ class Task extends Model
         'board_list_id',
         'name',
         'description',
+        'position',
     ];
 
     public static function statuses(): array

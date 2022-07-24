@@ -14,7 +14,15 @@ export class BoardListService {
   constructor(private http: HttpClient) {
   }
 
+  createBoardList(workspace: string, board: string, value: FormData): Observable<BoardList> {
+    return this.http.post<any>(this.apiUrl + 'boards/' + workspace + '/' + board + '/boardLists', value);
+  }
+
   getBoardListsWithTasks(workspace: string, board: string): Observable<BoardList[]> {
-    return this.http.get<any>(this.apiUrl + 'boards/' + workspace + '/' + board + '/lists');
+    return this.http.get<any>(this.apiUrl + 'boards/' + workspace + '/' + board + '/boardLists');
+  }
+
+  reorderBoardList(workspace: string, boardUuid: string, taskUuIds: string[], listUuId: string) {
+    return this.http.post(this.apiUrl + 'boards/' + workspace + '/' + boardUuid + '/boardLists/' + listUuId + '/reorder', taskUuIds);
   }
 }

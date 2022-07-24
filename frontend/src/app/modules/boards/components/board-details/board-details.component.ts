@@ -38,16 +38,23 @@ export class BoardDetailsComponent implements OnInit {
 
   options: SortableOptions = {
     group: 'tasks',
-    onEnd: (event: any) => {
-      console.log(event);
-      var itemEl = event.item;  // dragged HTMLElement
-      console.log(itemEl);
-      console.log(itemEl.to);
-      console.log(itemEl.from);
+    easing: "cubic-bezier(1, 0, 0, 1)",
+    dataIdAttr: 'data-uuid',
+    // Element dragging ended
+    onEnd: (evt) => {
+      const task = evt.item.dataset['taskUuid'];
+      const fromList = evt.from.dataset['uuid'];
+      const toList = evt.to.dataset['uuid'];
+
+      const listIndex = evt.to.dataset['index'];
+
+      if (fromList === toList) {
+        this.postReorderList(fromList, listIndex);
+      } else {
+        this.moveTask(task, fromList, toList);
+      }
+
     },
-    // onSort: (event: any) => {
-    //   console.log(event);
-    // },
     handle: '.grab-handle'
   };
 
@@ -65,6 +72,7 @@ export class BoardDetailsComponent implements OnInit {
   savingNewList = false;
 
   @ViewChild('closeNewTaskModalBtn') closeNewTaskModalBtn!: ElementRef
+  @ViewChild('closeNewTaskListBtn') closeNewTaskListBtn!: ElementRef
 
   ngOnInit(): void {
     this.workspaceService.activeWorkspace?.subscribe(workspace => {
@@ -131,6 +139,47 @@ export class BoardDetailsComponent implements OnInit {
     this.newListForm = new FormGroup({
       name: new FormControl('')
     });
+    this.loadingNewListForm = false;
+  }
+
+  newListSubmit() {
+    this.savingNewList = true;
+
+    this.boardListService.createBoardList(this.activeWorkspace.uuid, this.boardUuid, this.newListForm.value).pipe(untilDestroyed(this)).subscribe({
+      next: (list) => {
+        this.toastrService.success('List created successfully');
+        this.loadBoardListsAndTasks();
+        this.savingNewList = false;
+        this.newListForm.reset();
+        this.closeNewTaskListBtn.nativeElement.click();
+      },
+      error: (err) => {
+        this.toastrService.error(err.error.message);
+        this.savingNewList = false;
+      }
+    });
+  }
+
+  postReorderList(listUuId: string | undefined, listIndex: string | undefined) {
+    if (listUuId && listIndex) {
+      console.log(this.boardLists[parseInt(listIndex)]);
+
+      // Pull all the uuids from the list
+      const taskUuIds = this.boardLists[parseInt(listIndex)].tasks.map(task => task.uuid);
+
+      console.log(taskUuIds);
+
+      this.boardListService.reorderBoardList(this.activeWorkspace.uuid, this.boardUuid, taskUuIds, listUuId).pipe(untilDestroyed(this)).subscribe({
+        next: (list) => {
+          this.toastrService.success('List reordered successfully');
+          this.loadBoardListsAndTasks();
+        }
+      });
+    }
+  }
+
+  moveTask(taskUuid: string | undefined, fromListUuid: string | undefined, toListUuid: string | undefined) {
+    console.log('Moving task');
   }
 }
 

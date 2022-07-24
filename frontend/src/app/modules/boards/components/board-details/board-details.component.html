@@ -9,13 +9,18 @@
 </div>
 
 <div class="row">
-  <div class="col task-list-col" *ngFor="let taskList of boardLists">
+  <div class="col task-list-col" *ngFor="let taskList of boardLists; let i = index">
 
     <div class="task-list-inner-col">
 
       <p><b>{{taskList.name}}</b></p>
-      <div [sortablejs]="taskList.tasks" [sortablejsOptions]="options" style="min-height: 10px;">
-        <div *ngFor="let task of taskList.tasks">
+      <div
+        [sortablejs]="taskList.tasks"
+        [sortablejsOptions]="options" style="min-height: 10px;"
+        [attr.data-uuid]="taskList.uuid"
+        [attr.data-index]="i"
+      >
+        <div *ngFor="let task of taskList.tasks" [attr.data-task-uuid]="task.uuid">
           <div class="card mb-1 task-card">
             <div class="card-body">
               <span class="grab-handle fa fa-grip-lines"></span>
@@ -45,7 +50,7 @@
           <div class="mb-3">
             <label for="taskName" class="form-label">Title</label>
             <input type="text" class="form-control" id="taskName" aria-describedby="taskName" formControlName="name">
-            <div id="taskHelp" class="form-text">We'll never share your email with anyone else.</div>
+            <div id="taskHelp" class="form-text">Give the task a name</div>
           </div>
           <div class="mb-3">
             <label for="taskDescription" class="form-label">Task Description</label>
@@ -81,10 +86,21 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        New board list Modal
+        <spinner [show]="loadingNewListForm"></spinner>
+        <form [formGroup]="newListForm" (ngSubmit)="newListSubmit()" *ngIf="!loadingNewListForm">
+          <div class="mb-3">
+            <label for="boardName" class="form-label">Board Name</label>
+            <input type="text" class="form-control" id="boardName" aria-describedby="boardName" formControlName="name">
+            <div id="boardNameHelp" class="form-text">Name of the board list</div>
+          </div>
+
+          <button type="submit" class="btn btn-success" [disabled]="savingNewList">
+            <spinner [show]="savingNewList"></spinner> Save
+          </button>
+        </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" #closeNewTaskListModalBtn>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" #closeNewTaskListBtn>
           Close
         </button>
       </div>
