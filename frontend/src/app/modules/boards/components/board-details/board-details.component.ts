@@ -46,14 +46,14 @@ export class BoardDetailsComponent implements OnInit {
       const fromList = evt.from.dataset['uuid'];
       const toList = evt.to.dataset['uuid'];
 
-      const listIndex = evt.to.dataset['index'];
+      const toListIndex = evt.to.dataset['index'];
+      const fromListIndex = evt.from.dataset['index'];
 
       if (fromList === toList) {
-        this.postReorderList(fromList, listIndex);
+        this.postReorderList(fromList, toListIndex);
       } else {
-        this.moveTask(task, fromList, toList);
+        this.moveTask(fromList, toList, fromListIndex, toListIndex);
       }
-
     },
     handle: '.grab-handle'
   };
@@ -162,14 +162,14 @@ export class BoardDetailsComponent implements OnInit {
 
   postReorderList(listUuId: string | undefined, listIndex: string | undefined) {
     if (listUuId && listIndex) {
-      console.log(this.boardLists[parseInt(listIndex)]);
-
       // Pull all the uuids from the list
       const taskUuIds = this.boardLists[parseInt(listIndex)].tasks.map(task => task.uuid);
 
-      console.log(taskUuIds);
+      const postData = {
+        uuids: taskUuIds
+      };
 
-      this.boardListService.reorderBoardList(this.activeWorkspace.uuid, this.boardUuid, taskUuIds, listUuId).pipe(untilDestroyed(this)).subscribe({
+      this.boardListService.reorderBoardList(this.activeWorkspace.uuid, this.boardUuid, postData, listUuId).pipe(untilDestroyed(this)).subscribe({
         next: (list) => {
           this.toastrService.success('List reordered successfully');
           this.loadBoardListsAndTasks();
@@ -178,8 +178,27 @@ export class BoardDetailsComponent implements OnInit {
     }
   }
 
-  moveTask(taskUuid: string | undefined, fromListUuid: string | undefined, toListUuid: string | undefined) {
-    console.log('Moving task');
+  moveTask(fromListUuid: string | undefined, toListUuid: string | undefined, toListIndex: string | undefined, fromListIndex: string | undefined) {
+    if (!fromListUuid || !toListUuid || !toListIndex || !fromListIndex) {
+      return;
+    }
+
+    const fromListTaskUuIds = this.boardLists[parseInt(fromListIndex)].tasks.map(task => task.uuid);
+    const toListTaskUuIds = this.boardLists[parseInt(toListIndex)].tasks.map(task => task.uuid);
+
+    const postData = {
+      fromListUuIds: fromListTaskUuIds,
+      toListUuIds: toListTaskUuIds,
+      fromListUuId: fromListUuid,
+      toListUuId: toListUuid,
+    }
+
+    this.boardListService.moveTask(this.activeWorkspace.uuid, this.boardUuid, postData).pipe(untilDestroyed(this)).subscribe({
+      next: (task) => {
+        this.toastrService.success('Task moved successfully');
+        this.loadBoardListsAndTasks();
+      }
+    });
   }
 }
 

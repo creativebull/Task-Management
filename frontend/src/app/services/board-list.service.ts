@@ -22,7 +22,14 @@ export class BoardListService {
     return this.http.get<any>(this.apiUrl + 'boards/' + workspace + '/' + board + '/boardLists');
   }
 
-  reorderBoardList(workspace: string, boardUuid: string, taskUuIds: string[], listUuId: string) {
+  reorderBoardList(workspace: string, boardUuid: string, taskUuIds: { uuids: string[] }, listUuId: string) {
     return this.http.post(this.apiUrl + 'boards/' + workspace + '/' + boardUuid + '/boardLists/' + listUuId + '/reorder', taskUuIds);
+  }
+
+  moveTask(
+    workspace: string,
+    boardUuid: string,
+    postData: { toListUuIds: string[]; fromListUuIds: string[], fromListUuId: string, toListUuId: string }) {
+    return this.http.post(this.apiUrl + 'boards/' + workspace + '/' + boardUuid + '/boardLists/move-task', postData);
   }
 }
