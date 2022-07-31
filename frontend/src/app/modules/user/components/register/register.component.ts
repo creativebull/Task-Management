@@ -38,7 +38,6 @@ export class RegisterComponent implements OnInit {
   handleRegisterForm() {
     this.authService.register(this.registerForm.value).pipe(untilDestroyed(this)).subscribe({
       next: (res) => {
-        console.log(res);
         this.authService.sendToken(res.data.token);
         this.router.navigate(['/']);
       },

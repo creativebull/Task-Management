@@ -21,7 +21,6 @@ export class CreateBoardComponent implements OnInit {
   }
 
   handleBoardCreated($event: Board) {
-    console.log($event);
     this.toastr.success('Board Created!');
     this.router.navigate(['/boards']).then();
   }

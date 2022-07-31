@@ -10,6 +10,7 @@ import {BoardListService} from '../../../../services/board-list.service';
 import {WorkspaceMembersService} from '../../../../services/workspace-members.service';
 import {FormControl, FormGroup} from '@angular/forms';
 import {BoardList} from '../../../../interfaces/board-list';
+import {WorkspaceMember} from '../../../../interfaces/workspace-member';
 
 @UntilDestroy()
 @Component({
@@ -19,7 +20,7 @@ import {BoardList} from '../../../../interfaces/board-list';
 })
 export class BoardDetailsComponent implements OnInit {
   activeListUuId!: string;
-  workspaceMembers?: any; // TODO add an interface for this
+  workspaceMembers?: WorkspaceMember[];
 
   constructor(
     private workspaceService: WorkspaceService,
@@ -42,7 +43,6 @@ export class BoardDetailsComponent implements OnInit {
     dataIdAttr: 'data-uuid',
     // Element dragging ended
     onEnd: (evt) => {
-      const task = evt.item.dataset['taskUuid'];
       const fromList = evt.from.dataset['uuid'];
       const toList = evt.to.dataset['uuid'];
 
@@ -126,6 +126,10 @@ export class BoardDetailsComponent implements OnInit {
         this.loadBoardListsAndTasks();
         this.closeNewTaskModalBtn.nativeElement.click();
         this.savingNewTask = false;
+      },
+      error: (err) => {
+        this.toastrService.error(err.error.message);
+        this.savingNewTask = false;
       }
     });
   }
@@ -178,7 +182,7 @@ export class BoardDetailsComponent implements OnInit {
     }
   }
 
-  moveTask(fromListUuid: string | undefined, toListUuid: string | undefined, toListIndex: string | undefined, fromListIndex: string | undefined) {
+  moveTask(fromListUuid: string | undefined, toListUuid: string | undefined, fromListIndex: string | undefined, toListIndex: string | undefined,) {
     if (!fromListUuid || !toListUuid || !toListIndex || !fromListIndex) {
       return;
     }
@@ -199,6 +203,10 @@ export class BoardDetailsComponent implements OnInit {
         this.loadBoardListsAndTasks();
       }
     });
+  }
+
+  loadTaskDetails(taskUuId: string) {
+    console.log(taskUuId);
   }
 }
 

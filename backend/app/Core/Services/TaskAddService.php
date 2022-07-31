@@ -49,6 +49,8 @@ class TaskAddService
             if (!WorkspacePermissionService::userHasAccessToWorkspace($user, $workspace)) {
                 throw WorkspaceException::noAccessToWorkspace();
             }
+
+            $validated['assigned_to'] = $user->id;
         }
 
         $validated['board_list_id'] = $boardList->id;

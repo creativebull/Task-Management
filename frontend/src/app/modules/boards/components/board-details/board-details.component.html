@@ -19,12 +19,19 @@
         [sortablejsOptions]="options" style="min-height: 10px;"
         [attr.data-uuid]="taskList.uuid"
         [attr.data-index]="i"
+        [attr.data-name]="taskList.name"
       >
         <div *ngFor="let task of taskList.tasks" [attr.data-task-uuid]="task.uuid">
           <div class="card mb-1 task-card">
             <div class="card-body">
               <span class="grab-handle fa fa-grip-lines"></span>
-              {{task.name}}
+              &nbsp;
+              <a
+                (click)="loadTaskDetails(task.uuid)"
+                data-bs-toggle="modal"
+                data-bs-target="#taskDetailsModal"
+                class=""
+              >{{task.name}}</a>
             </div>
           </div>
         </div>
@@ -60,7 +67,7 @@
             <label for="taskAssignedUser" class="form-label">Assigned</label>
             <select class="form-control" id="taskAssignedUser" formControlName="assigned_to">
               <option>Current User</option>
-              <option *ngFor="let member of workspaceMembers" [value]="member.uuid">{{member.name}}</option>
+              <option *ngFor="let member of workspaceMembers" [value]="member.user.uuid">{{member.user.name}}</option>
             </select>
           </div>
 
@@ -108,3 +115,24 @@
   </div>
 </div>
 <!-- End Add board list modal -->
+
+<!-- Task details modal -->
+<div class="modal fade" id="taskDetailsModal" tabindex="-1" aria-labelledby="tasksDetailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tasksDetailsModalLabel">Task Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Task Details
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" #closeTaskDetailsModal>
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End task details modal -->
