@@ -2,8 +2,11 @@
 
 <div class="row mb-4">
   <div class="col-12 text-end">
+    <a (click)="boardSettingsClick()" class="btn btn-secondary btn-sm btn-mr" data-bs-toggle="modal" data-bs-target="#boardSettingsModal">
+      <span class="fa fa-cog"></span> Board Settings
+    </a>
     <a (click)="addNewListClick()" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#newBoardListModal">
-      + Add List
+      <span class="fa fa-list"></span> Add List
     </a>
   </div>
 </div>
@@ -13,7 +16,7 @@
 
     <div class="task-list-inner-col">
 
-      <p><b>{{taskList.name}}</b></p>
+      <p class="ms-1"><b>{{taskList.name}}</b></p>
       <div
         [sortablejs]="taskList.tasks"
         [sortablejsOptions]="options" style="min-height: 10px;"
@@ -61,7 +64,8 @@
           </div>
           <div class="mb-3">
             <label for="taskDescription" class="form-label">Task Description</label>
-            <textarea class="form-control" id="taskDescription" style="resize: vertical;" formControlName="description"></textarea>
+            <textarea class="form-control" id="taskDescription" style="resize: vertical;"
+                      formControlName="description"></textarea>
           </div>
           <div class="mb-3">
             <label for="taskAssignedUser" class="form-label">Assigned</label>
@@ -72,7 +76,8 @@
           </div>
 
           <button type="submit" class="btn btn-success" [disabled]="savingNewTask">
-            <spinner [show]="savingNewTask"></spinner> Save
+            <spinner [show]="savingNewTask"></spinner>
+            Save
           </button>
         </form>
       </div>
@@ -85,24 +90,26 @@
 <!-- End Add Task Modal -->
 
 <!-- Add board list modal -->
-<div class="modal fade" id="newBoardListModal" tabindex="-1" aria-labelledby="newBoardListModalLabel" aria-hidden="true">
+<div class="modal fade" id="newBoardListModal" tabindex="-1" aria-labelledby="newBoardListModalLabel"
+     aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="newBoardListModalLabel">New Task</h5>
+        <h5 class="modal-title" id="newBoardListModalLabel">New List</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <spinner [show]="loadingNewListForm"></spinner>
         <form [formGroup]="newListForm" (ngSubmit)="newListSubmit()" *ngIf="!loadingNewListForm">
           <div class="mb-3">
-            <label for="boardName" class="form-label">Board Name</label>
-            <input type="text" class="form-control" id="boardName" aria-describedby="boardName" formControlName="name">
-            <div id="boardNameHelp" class="form-text">Name of the board list</div>
+            <label for="boardListName" class="form-label">Board List Name</label>
+            <input type="text" class="form-control" id="boardListName" aria-describedby="boardName" formControlName="name">
+            <div id="boardListNameHelp" class="form-text">Name of the board list</div>
           </div>
 
           <button type="submit" class="btn btn-success" [disabled]="savingNewList">
-            <spinner [show]="savingNewList"></spinner> Save
+            <spinner [show]="savingNewList"></spinner>
+            Save
           </button>
         </form>
       </div>
@@ -136,3 +143,25 @@
   </div>
 </div>
 <!-- End task details modal -->
+
+<!-- Board Settings Modal -->
+<div class="modal fade" id="boardSettingsModal" tabindex="-1" aria-labelledby="boardSettingsModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="boardSettingsModalLabel">Board Settings</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <spinner [show]="loadingBoardSettingsForm"></spinner>
+        <app-board-form [board]="activeBoard" (boardUpdated)="handleBoardUpdated($event)" *ngIf="!loadingBoardSettingsForm"></app-board-form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" #closeBoardSettingsModalBtn>
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Board Settings Modal -->

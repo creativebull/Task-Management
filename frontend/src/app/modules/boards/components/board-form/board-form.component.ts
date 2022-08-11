@@ -65,9 +65,15 @@ export class BoardFormComponent implements OnInit {
 
   updateBoard() {
     this.saving = true;
-    if (this.board?.uuid) {
 
-      this.boardService.updateBoard(this.board.uuid, this.boardForm.value, this.activeWorkspace.uuid).pipe(untilDestroyed(this)).subscribe({
+    const formData = new FormData();
+    formData.append('name', this.boardForm.value.name);
+    formData.append('description', this.boardForm.value.description);
+    if (this.imageSource) {
+      formData.append('image', this.imageSource);
+    }
+    if (this.board?.uuid) {
+      this.boardService.updateBoard(this.board.uuid, formData, this.activeWorkspace.uuid).pipe(untilDestroyed(this)).subscribe({
         next: (board: Board) => {
           this.saving = false;
           this.boardUpdated.emit(board);
@@ -98,7 +104,9 @@ export class BoardFormComponent implements OnInit {
     const formData = new FormData();
     formData.append('name', this.boardForm.value.name);
     formData.append('description', this.boardForm.value.description);
-    formData.append('image', this.imageSource);
+    if (this.imageSource) {
+      formData.append('image', this.imageSource);
+    }
 
     this.boardService.createBoard(formData, this.activeWorkspace.uuid).pipe(untilDestroyed(this)).subscribe({
       next: (board: Board) => {

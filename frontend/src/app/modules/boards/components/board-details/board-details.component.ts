@@ -11,6 +11,8 @@ import {WorkspaceMembersService} from '../../../../services/workspace-members.se
 import {FormControl, FormGroup} from '@angular/forms';
 import {BoardList} from '../../../../interfaces/board-list';
 import {WorkspaceMember} from '../../../../interfaces/workspace-member';
+import {Board} from '../../../../interfaces/board';
+import {BoardService} from '../../../../services/board.service';
 
 @UntilDestroy()
 @Component({
@@ -28,12 +30,14 @@ export class BoardDetailsComponent implements OnInit {
     private taskService: TasksService,
     private toastrService: ToastrService,
     private boardListService: BoardListService,
-    private workspaceMembersService: WorkspaceMembersService
+    private workspaceMembersService: WorkspaceMembersService,
+    private boardService: BoardService,
   ) {
   }
 
   activeWorkspace: any;
   boardUuid!: string;
+  activeBoard!: Board;
 
   boardLists: BoardList[] = [];
 
@@ -73,6 +77,10 @@ export class BoardDetailsComponent implements OnInit {
 
   @ViewChild('closeNewTaskModalBtn') closeNewTaskModalBtn!: ElementRef
   @ViewChild('closeNewTaskListBtn') closeNewTaskListBtn!: ElementRef
+  @ViewChild('closeBoardSettingsModalBtn') closeBoardSettingsModalBtn!: ElementRef
+
+  loadingBoardSettingsForm = true;
+  boardSettingsForm!: FormGroup;
 
   ngOnInit(): void {
     this.workspaceService.activeWorkspace?.subscribe(workspace => {
@@ -81,6 +89,7 @@ export class BoardDetailsComponent implements OnInit {
           this.boardUuid = params['uuid'];
           this.loadBoardListsAndTasks();
           this.loadWorkspaceMembers();
+          this.loadBoardDetails();
         })
       }
     );
@@ -208,5 +217,33 @@ export class BoardDetailsComponent implements OnInit {
   loadTaskDetails(taskUuId: string) {
     console.log(taskUuId);
   }
-}
 
+  boardSettingsClick() {
+    console.log('Board Settings Clicked');
+    this.loadingBoardSettingsForm = true;
+    this.boardSettingsForm = new FormGroup({
+      name: new FormControl(this.activeBoard.name),
+      description: new FormControl(this.activeBoard.description)
+    });
+    this.loadingBoardSettingsForm = false;
+  }
+
+  private loadBoardDetails() {
+    this.boardService.boardDetails(this.boardUuid, this.activeWorkspace.uuid).pipe(untilDestroyed(this)).subscribe({
+        next: (board) => {
+          this.activeBoard = board;
+        },
+        error: (err) => {
+          console.error(err.error.message);
+          this.toastrService.error('Failed to load board details');
+        }
+      }
+    );
+  }
+
+  handleBoardUpdated(board: any) {
+    this.activeBoard = board;
+    this.closeBoardSettingsModalBtn.nativeElement.click();
+    this.toastrService.success('Board updated successfully');
+  }
+}

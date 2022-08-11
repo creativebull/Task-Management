@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Core\Services\Board\BoardCreateService;
+use App\Core\Services\Board\BoardDeleteService;
+use App\Core\Services\Board\BoardUpdateService;
 use App\Exceptions\BoardException;
 use App\Exceptions\WorkspaceException;
 use App\Http\Requests\StoreBoardRequest;
@@ -11,8 +14,6 @@ use App\Http\Resources\Board\BoardResource;
 use App\Models\Board;
 use App\Models\Workspace;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
 use Throwable;
 
 class BoardController extends Controller
@@ -39,48 +40,7 @@ class BoardController extends Controller
      */
     public function store(StoreBoardRequest $request, Workspace $workspace): JsonResponse
     {
-        $requestData = $request->validated();
-        $requestData['workspace_id'] = $workspace->id;
-        $requestData['user_id'] = auth()->user()->id;
-
-        $board = new Board($requestData);
-
-        // Check if there is already a board with the same name
-        $existingBoard = Board::query()->where('workspace_id', '=', $workspace->id)->where('name', '=', $board->name)->first();
-
-        if ($existingBoard) {
-            throw BoardException::boardSameName();
-        }
-
-        $board->saveOrFail();
-
-        $image = $request->file('image');
-
-        // Check if there was a file, If so save it
-        if ($image !== null) {
-            $filename = time() . '_' . $image->getClientOriginalName();
-
-            $fullFilePath = Storage::disk('public')->path('board-images/' . $filename);
-            $databasePath = 'storage/board-images/' . $filename;
-
-            // Ensure the directory exists
-            if (!Storage::disk('public')->exists('board-images')) {
-                Storage::disk('public')->makeDirectory('board-images');
-            }
-
-            $interventionImage = Image::make($image);
-            $interventionImage->resize(200, 200, function ($constraint) {
-                $constraint->aspectRatio();
-            })->save($fullFilePath);
-
-            $board->image = $databasePath;
-        } else {
-            $board->image = 'img/default-board-image.png';
-        }
-        $board->save();
-
-        $board->refresh();
-
+        $board = (new BoardCreateService())->createBoard($request->validated(), $workspace, $request->file('image'));
         return response()->json(new BoardResource($board), 201);
     }
 
@@ -111,11 +71,7 @@ class BoardController extends Controller
      */
     public function update(UpdateBoardRequest $request, Workspace $workspace, Board $board): JsonResponse
     {
-        if ($workspace->user->id !== auth()->user()->id) {
-            throw WorkspaceException::workspaceNotFound();
-        }
-        $board->update($request->validated());
-
+        $board = (new BoardUpdateService())->updateBoard($board, $request->validated(), $workspace, $request->file('image'));
         return response()->json(new BoardResource($board));
     }
 
@@ -130,17 +86,7 @@ class BoardController extends Controller
      */
     public function destroy(Workspace $workspace, Board $board): JsonResponse
     {
-        if ($workspace->user->id !== auth()->user()->id) {
-            throw WorkspaceException::workspaceNotFound();
-        }
-
-        if ($board->user->id !== auth()->user()->id) {
-            throw BoardException::boardNotFound();
-        }
-
-        $board->delete();
-
-        // TODO Delete all board lists and tasks inside those board lists
+        (new BoardDeleteService())->deleteBoard($board, $workspace);
 
         return response()->json(null, 204);
     }

@@ -1,27 +1,36 @@
-<div class="card">
-  <div class="card-body">
+<form [formGroup]="boardForm" *ngIf="!loading" (ngSubmit)="handleSubmit()" enctype="multipart/form-data">
 
-    <form [formGroup]="boardForm" *ngIf="!loading" (ngSubmit)="handleSubmit()" enctype="multipart/form-data">
-
-      <div class="mb-3">
-        <label for="name" class="form-label">Name</label>
-        <input type="text" class="form-control" id="name" placeholder="Board Name..." formControlName="name">
-      </div>
-
-      <div class="mb-3">
-        <label for="description" class="form-label">Name</label>
-        <input type="text" class="form-control" id="description" placeholder="Board description..." formControlName="description">
-      </div>
-
-      <div class="mb-3">
-        <label for="image" class="form-label">Image</label>
-        <input type="file" accept="image/png, image/jpeg, image/jpg" class="form-control" id="image" (change)="onFileChange($event)">
-      </div>
-
-      <button type="submit" class="btn btn-success" [disabled]="boardForm.invalid || saving">
-        <spinner [show]="saving"></spinner> <span class="fa fa-save" *ngIf="!saving"></span> Submit
-      </button>
-
-    </form>
+  <div class="mb-3">
+    <label for="name" class="form-label">Name</label>
+    <input type="text" class="form-control" id="name" placeholder="Board Name..." formControlName="name">
   </div>
-</div>
+
+  <div class="mb-3">
+    <label for="description" class="form-label">Name</label>
+    <input
+      type="text"
+      class="form-control"
+      id="description"
+      placeholder="Board description..."
+      formControlName="description"
+    >
+  </div>
+
+  <div class="mb-3">
+    <label for="image" class="form-label">Image</label>
+    <input
+      type="file"
+      accept="image/png, image/jpeg, image/jpg"
+      class="form-control"
+      id="image"
+      (change)="onFileChange($event)"
+    >
+  </div>
+
+  <button type="submit" class="btn btn-success" [disabled]="boardForm.invalid || saving">
+    <spinner [show]="saving"></spinner>
+    <span class="fa fa-save" *ngIf="!saving"></span> Submit
+  </button>
+
+</form>
+

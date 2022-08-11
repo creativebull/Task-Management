@@ -26,9 +26,9 @@ export class BoardService {
     return this.http.post<any>(this.apiUrl + 'boards/' + workspace, formData);
   }
 
-  updateBoard(uuid: string, formData: any, workspace: string): Observable<Board> {
-    formData.method = 'PUT';
-    return this.http.put<any>(this.apiUrl + 'boards/' + workspace + '/' + uuid, formData);
+  updateBoard(uuid: string, formData: FormData, workspace: string): Observable<Board> {
+    formData.set('_method', 'PUT');
+    return this.http.post<any>(this.apiUrl + 'boards/' + workspace + '/' + uuid, formData);
   }
 
   deleteBoard(uuid: string, workspace: string): Observable<Board> {
