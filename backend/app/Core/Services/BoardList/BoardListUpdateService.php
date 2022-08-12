@@ -2,6 +2,7 @@
 
 namespace App\Core\Services\BoardList;
 
+use App\Core\Services\Auth\AuthHelper;
 use App\Core\Services\Workspace\WorkspacePermissionService;
 use App\Exceptions\WorkspaceException;
 use App\Models\Board;
@@ -22,7 +23,7 @@ class BoardListUpdateService
     public function updateBoardList(Workspace $workspace, Board $board, BoardList $boardList, array $validatedData): self
     {
         // Make sure the user has access to this workspace
-        if (!WorkspacePermissionService::userHasAccessToWorkspace(auth()->user(), $workspace)) {
+        if (!WorkspacePermissionService::userHasAccessToWorkspace(AuthHelper::getLoggedInUser(), $workspace)) {
             throw WorkspaceException::noAccessToWorkspace();
         }
 

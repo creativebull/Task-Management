@@ -1,11 +1,22 @@
-<app-main-header [header]="'Tasks'" [breadCrumbs]="breadCrumbs"></app-main-header>
+<app-main-header [header]="activeBoard.name" [subHeader]="activeBoard.description" [breadCrumbs]="breadCrumbs"
+                 *ngIf="!loadingBoardDetails"></app-main-header>
 
 <div class="row mb-4">
   <div class="col-12 text-end">
-    <a (click)="boardSettingsClick()" class="btn btn-secondary btn-sm btn-mr" data-bs-toggle="modal" data-bs-target="#boardSettingsModal">
+    <a
+      (click)="boardSettingsClick()"
+      class="btn btn-secondary btn-sm btn-mr"
+      data-bs-toggle="modal"
+      data-bs-target="#boardSettingsModal"
+    >
       <span class="fa fa-cog"></span> Board Settings
     </a>
-    <a (click)="addNewListClick()" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#newBoardListModal">
+    <a
+      (click)="addNewListClick()"
+      class="btn btn-primary btn-sm"
+      data-bs-toggle="modal"
+      data-bs-target="#newBoardListModal"
+    >
       <span class="fa fa-list"></span> Add List
     </a>
   </div>
@@ -16,7 +27,20 @@
 
     <div class="task-list-inner-col">
 
-      <p class="ms-1"><b>{{taskList.name}}</b></p>
+      <p class="ms-1" (click)="updateBoardListNameClick(i)" *ngIf="boardListEditIndex !== i">
+        <b>{{taskList.name}}</b>
+      </p>
+
+      <input
+        type="text"
+        class="form-control"
+        *ngIf="boardListEditIndex === i"
+        [(ngModel)]="taskList.name"
+        (keyup.enter)="updateBoardListName(i)"
+        (blur)="updateBoardListName(i)"
+        (focusout)="updateBoardListName(i)"
+      />
+
       <div
         [sortablejs]="taskList.tasks"
         [sortablejsOptions]="options" style="min-height: 10px;"
@@ -103,7 +127,8 @@
         <form [formGroup]="newListForm" (ngSubmit)="newListSubmit()" *ngIf="!loadingNewListForm">
           <div class="mb-3">
             <label for="boardListName" class="form-label">Board List Name</label>
-            <input type="text" class="form-control" id="boardListName" aria-describedby="boardName" formControlName="name">
+            <input type="text" class="form-control" id="boardListName" aria-describedby="boardName"
+                   formControlName="name">
             <div id="boardListNameHelp" class="form-text">Name of the board list</div>
           </div>
 
@@ -145,7 +170,13 @@
 <!-- End task details modal -->
 
 <!-- Board Settings Modal -->
-<div class="modal fade" id="boardSettingsModal" tabindex="-1" aria-labelledby="boardSettingsModalLabel" aria-hidden="true">
+<div
+  class="modal fade"
+  id="boardSettingsModal"
+  tabindex="-1"
+  aria-labelledby="boardSettingsModalLabel"
+  aria-hidden="true"
+>
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -153,8 +184,64 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <spinner [show]="loadingBoardSettingsForm"></spinner>
-        <app-board-form [board]="activeBoard" (boardUpdated)="handleBoardUpdated($event)" *ngIf="!loadingBoardSettingsForm"></app-board-form>
+
+        <nav>
+          <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-general-settings-tab" data-bs-toggle="tab"
+                    data-bs-target="#nav-general-board-settings" type="button" role="tab"
+                    aria-controls="nav-general-board-settings" aria-selected="true">General
+            </button>
+            <button class="nav-link" id="nav-board-lists-tab" data-bs-toggle="tab" data-bs-target="#nav-board-lists"
+                    type="button" role="tab" aria-controls="nav-board-lists" aria-selected="false">Lists
+            </button>
+          </div>
+        </nav>
+
+        <div class="tab-content" id="nav-tabContent">
+
+          <div class="tab-pane fade show active" id="nav-general-board-settings" role="tabpanel"
+               aria-labelledby="nav-general-settings-tab">
+
+            <p></p>
+            <spinner [show]="loadingBoardSettingsForm"></spinner>
+            <app-board-form
+              [board]="activeBoard"
+              (boardUpdated)="handleBoardUpdated($event)"
+              *ngIf="!loadingBoardSettingsForm"
+            ></app-board-form>
+
+          </div>
+
+          <div class="tab-pane fade" id="nav-board-lists" role="tabpanel" aria-labelledby="nav-board-lists-tab">
+            <spinner [show]="loadingBoardListsAndTasks"></spinner>
+
+            <div
+              [sortablejs]="boardLists"
+              [sortablejsOptions]="boardListsReorderOptions" style="min-height: 10px;"
+            >
+              <div *ngFor="let boardList of boardLists">
+                <div class="border border-1 p-1 ps-2 pe-2">
+                  <div class="row">
+                    <div class="col-sm-10">
+                      {{boardList.name}}
+                    </div>
+                    <div class="col-sm-2">
+                      <button
+                        class="btn btn-sm btn-danger"
+                        [swal]="{ title: 'Are you sure?', text: 'All tasks inside this list will also be deleted!', showCancelButton: true }"
+                        (confirm)="deleteBoardList(boardList)"
+                      >
+                        <i class="fa fa-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" #closeBoardSettingsModalBtn>

@@ -32,4 +32,13 @@ export class BoardListService {
     postData: { toListUuIds: string[]; fromListUuIds: string[], fromListUuId: string, toListUuId: string }) {
     return this.http.post(this.apiUrl + 'boards/' + workspace + '/' + boardUuid + '/boardLists/move-task', postData);
   }
+
+  updateBoardList(workspace: string, boardUuId: string, boardListUuId: string, formData: FormData): Observable<BoardList> {
+    formData.append('_method', 'put');
+    return this.http.post<any>(this.apiUrl + 'boards/' + workspace + '/' + boardUuId + '/boardLists/' + boardListUuId, formData);
+  }
+
+  deleteBoardList(workspace: string, boardUuId: string, boardListUuId: string): Observable<any> {
+    return this.http.delete(this.apiUrl + 'boards/' + workspace + '/' + boardUuId + '/boardLists/' + boardListUuId);
+  }
 }

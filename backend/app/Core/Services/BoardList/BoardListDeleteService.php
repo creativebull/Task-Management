@@ -2,6 +2,7 @@
 
 namespace App\Core\Services\BoardList;
 
+use App\Core\Services\Auth\AuthHelper;
 use App\Core\Services\Workspace\WorkspacePermissionService;
 use App\Exceptions\WorkspaceException;
 use App\Models\Board;
@@ -10,10 +11,17 @@ use App\Models\Workspace;
 
 class BoardListDeleteService
 {
-    public function deleteBoardList(Workspace $workspace, Board $board, BoardList $boardList)
+    /**
+     * @param Workspace $workspace
+     * @param Board $board
+     * @param BoardList $boardList
+     * @return $this
+     * @throws WorkspaceException
+     */
+    public function deleteBoardList(Workspace $workspace, Board $board, BoardList $boardList): self
     {
         // Make sure the user has access to this workspace
-        if (!WorkspacePermissionService::userHasAccessToWorkspace(auth()->user(), $workspace)) {
+        if (!WorkspacePermissionService::userHasAccessToWorkspace(AuthHelper::getLoggedInUser(), $workspace)) {
             throw WorkspaceException::noAccessToWorkspace();
         }
 

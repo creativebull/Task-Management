@@ -23,6 +23,8 @@ import {BoardService} from '../../../../services/board.service';
 export class BoardDetailsComponent implements OnInit {
   activeListUuId!: string;
   workspaceMembers?: WorkspaceMember[];
+  loadingBoardDetails = true;
+  loadingBoardListsAndTasks = true;
 
   constructor(
     private workspaceService: WorkspaceService,
@@ -62,6 +64,12 @@ export class BoardDetailsComponent implements OnInit {
     handle: '.grab-handle'
   };
 
+  boardListsReorderOptions: SortableOptions = {
+    group: 'board-lists',
+    easing: "cubic-bezier(1, 0, 0, 1)",
+    dataIdAttr: 'data-uuid',
+  }
+
   breadCrumbs: Breadcrumb[] = [
     {linkText: 'Home', routeItems: ['/']},
     {linkText: 'Boards', routeItems: ['/boards']},
@@ -82,6 +90,8 @@ export class BoardDetailsComponent implements OnInit {
   loadingBoardSettingsForm = true;
   boardSettingsForm!: FormGroup;
 
+  boardListEditIndex?: number;
+
   ngOnInit(): void {
     this.workspaceService.activeWorkspace?.subscribe(workspace => {
         this.activeWorkspace = workspace;
@@ -96,9 +106,15 @@ export class BoardDetailsComponent implements OnInit {
   }
 
   loadBoardListsAndTasks() {
+    this.loadingBoardListsAndTasks = true;
     this.boardListService.getBoardListsWithTasks(this.activeWorkspace.uuid, this.boardUuid).pipe(untilDestroyed(this)).subscribe({
       next: (boardLists) => {
         this.boardLists = boardLists;
+        this.loadingBoardListsAndTasks = false;
+      },
+      error: (err) => {
+        this.toastrService.error(err.error.message);
+        this.loadingBoardListsAndTasks = false;
       }
     })
   }
@@ -229,13 +245,16 @@ export class BoardDetailsComponent implements OnInit {
   }
 
   private loadBoardDetails() {
+    this.loadingBoardDetails = true;
     this.boardService.boardDetails(this.boardUuid, this.activeWorkspace.uuid).pipe(untilDestroyed(this)).subscribe({
         next: (board) => {
           this.activeBoard = board;
+          this.loadingBoardDetails = false;
         },
         error: (err) => {
           console.error(err.error.message);
           this.toastrService.error('Failed to load board details');
+          this.loadingBoardDetails = false;
         }
       }
     );
@@ -245,5 +264,37 @@ export class BoardDetailsComponent implements OnInit {
     this.activeBoard = board;
     this.closeBoardSettingsModalBtn.nativeElement.click();
     this.toastrService.success('Board updated successfully');
+  }
+
+  updateBoardListNameClick(indexOfBoardList: number) {
+    console.log(indexOfBoardList);
+    this.boardListEditIndex = indexOfBoardList;
+  }
+
+  updateBoardListName(indexOfBoardList: number) {
+    this.boardListEditIndex = undefined;
+
+    const board = this.boardLists[indexOfBoardList];
+
+    const formData = new FormData();
+    formData.append('name', board.name);
+
+    this.boardListService.updateBoardList(this.activeWorkspace.uuid, this.activeBoard.uuid, board.uuid, formData).pipe(untilDestroyed(this)).subscribe({
+      next: (list) => {
+        this.toastrService.success('List updated successfully');
+      }
+    });
+  }
+
+  deleteBoardList(boardList: BoardList) {
+    this.boardListService.deleteBoardList(this.activeWorkspace.uuid, this.activeBoard.uuid, boardList.uuid).pipe(untilDestroyed(this)).subscribe({
+      next: (list) => {
+        this.toastrService.success('List deleted successfully');
+        this.loadBoardListsAndTasks();
+      },
+      error: (err) => {
+        this.toastrService.error(err.error.message);
+      }
+    });
   }
 }
