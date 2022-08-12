@@ -68,6 +68,9 @@ export class BoardDetailsComponent implements OnInit {
     group: 'board-lists',
     easing: "cubic-bezier(1, 0, 0, 1)",
     dataIdAttr: 'data-uuid',
+    onEnd: (evt) => {
+      this.reorderBoardLists();
+    }
   }
 
   breadCrumbs: Breadcrumb[] = [
@@ -294,6 +297,23 @@ export class BoardDetailsComponent implements OnInit {
       },
       error: (err) => {
         this.toastrService.error(err.error.message);
+      }
+    });
+  }
+
+  reorderBoardLists()
+  {
+    // Create a nice simple array of the uuids of the lists
+    const listUuids = this.boardLists.map(list => list.uuid);
+
+    const postData = {
+      boardLists: listUuids
+    }
+
+    return this.boardListService.reorderBoardLists(this.activeWorkspace.uuid, this.activeBoard.uuid, postData).pipe(untilDestroyed(this)).subscribe({
+      next: (list) => {
+        this.toastrService.success('Lists reordered successfully');
+        this.loadBoardListsAndTasks();
       }
     });
   }

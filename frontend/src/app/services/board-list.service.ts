@@ -23,7 +23,7 @@ export class BoardListService {
   }
 
   reorderBoardList(workspace: string, boardUuid: string, taskUuIds: { uuids: string[] }, listUuId: string) {
-    return this.http.post(this.apiUrl + 'boards/' + workspace + '/' + boardUuid + '/boardLists/' + listUuId + '/reorder', taskUuIds);
+    return this.http.post(this.apiUrl + 'boards/' + workspace + '/' + boardUuid + '/boardLists/' + listUuId + '/reorder-tasks', taskUuIds);
   }
 
   moveTask(
@@ -40,5 +40,9 @@ export class BoardListService {
 
   deleteBoardList(workspace: string, boardUuId: string, boardListUuId: string): Observable<any> {
     return this.http.delete(this.apiUrl + 'boards/' + workspace + '/' + boardUuId + '/boardLists/' + boardListUuId);
+  }
+
+  reorderBoardLists(workspace: string, boardUuId: string, boardListUuIds: {boardLists: string[]}): Observable<any> {
+    return this.http.post(this.apiUrl + 'boards/' + workspace + '/' + boardUuId + '/boardLists/reorder', boardListUuIds);
   }
 }

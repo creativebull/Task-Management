@@ -46,8 +46,9 @@ Route::middleware(['auth:api'])->group(function () {
 
                 Route::get('boardLists', [BoardListController::class, 'listsForBoard'])->name('boards.lists');
                 Route::post('boardLists', [BoardListController::class, 'store'])->name('boards.lists');
+                Route::post('boardLists/reorder', [BoardListController::class, 'reorderLists'])->name('boards.lists');
                 Route::post('boardLists/move-task', [BoardListController::class, 'moveTask'])->name('boards.lists.move');
-                Route::post('boardLists/{boardList:uuid}/reorder', [BoardListController::class, 'reorder'])->name('boards.lists.reorder');
+                Route::post('boardLists/{boardList:uuid}/reorder-tasks', [BoardListController::class, 'reorderTasks'])->name('boards.lists.reorder-tasks');
                 Route::delete('boardLists/{boardList:uuid}', [BoardListController::class, 'destroy'])->name('boards.lists.destroy');
                 Route::put('boardLists/{boardList:uuid}', [BoardListController::class, 'update'])->name('boards.lists.update');
 

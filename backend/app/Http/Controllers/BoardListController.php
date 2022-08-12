@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Core\Services\BoardList\BoardListDeleteService;
+use App\Core\Services\BoardList\BoardListMoveTaskService;
+use App\Core\Services\BoardList\BoardListReorderService;
+use App\Core\Services\BoardList\BoardListReorderTasksService;
+use App\Core\Services\BoardList\BoardListStoreService;
+use App\Core\Services\BoardList\BoardListsWithTasksService;
 use App\Core\Services\BoardList\BoardListUpdateService;
-use App\Core\Services\Workspace\WorkspacePermissionService;
 use App\Exceptions\WorkspaceException;
 use App\Http\Requests\StoreBoardListRequest;
 use App\Http\Requests\UpdateBoardListRequest;
+use App\Http\Resources\BoardListResource;
 use App\Http\Resources\BoardLists\BoardListWithTasksResource;
 use App\Models\Board;
 use App\Models\BoardList;
-use App\Models\Task;
 use App\Models\Workspace;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -27,21 +31,7 @@ class BoardListController extends Controller
      */
     public function listsForBoard(Workspace $workspace, Board $board): JsonResponse
     {
-        // Ensure the user has access to this workspace
-        if (!WorkspacePermissionService::userHasAccessToWorkspace(auth()->user(), $workspace)) {
-            throw WorkspaceException::noAccessToWorkspace();
-        }
-
-        // Get the board lists with tasks
-        $boardLists = BoardList::query()
-            ->with(['tasks' => function ($query) {
-                $query->orderBy('position', 'asc');
-            }])
-            ->where('board_id', '=', $board->id)
-            ->orderBy('position')
-            ->get();
-
-        return response()->json(BoardListWithTasksResource::collection($boardLists));
+        return response()->json(BoardListWithTasksResource::collection((new BoardListsWithTasksService())->boardListsWithTasks($workspace, $board)));
     }
 
     /**
@@ -55,22 +45,7 @@ class BoardListController extends Controller
      */
     public function store(Workspace $workspace, Board $board, StoreBoardListRequest $request): JsonResponse
     {
-        // Ensure the user has access to this workspace
-        if (!WorkspacePermissionService::userHasAccessToWorkspace(auth()->user(), $workspace)) {
-            throw WorkspaceException::noAccessToWorkspace();
-        }
-
-        // Find the next position for the board list
-        $nextPosition = BoardList::query()->where('board_id', '=', $board->id)->max('position') + 1;
-
-        $validatedData = $request->validated();
-        $validatedData['board_id'] = $board->id;
-        $validatedData['position'] = $nextPosition;
-
-        // Create the board list
-        $boardList = new BoardList($validatedData);
-
-        $boardList->saveOrFail();
+        $boardList = (new BoardListStoreService())->storeBoardList($workspace, $board, $request);
 
         return response()->json(new BoardListWithTasksResource($boardList), Response::HTTP_CREATED);
     }
@@ -79,109 +54,34 @@ class BoardListController extends Controller
      * @throws Throwable
      * @throws WorkspaceException
      */
-    public function reorder(Workspace $workspace, Board $board, BoardList $boardList, Request $request): JsonResponse
+    public function reorderTasks(Workspace $workspace, Board $board, BoardList $boardList, Request $request): JsonResponse
     {
-        // Ensure the user has access to this workspace
-        if (!WorkspacePermissionService::userHasAccessToWorkspace(auth()->user(), $workspace)) {
-            throw WorkspaceException::noAccessToWorkspace();
-        }
-
-        // Make sure the board belongs to the workspace
-        if ($board->workspace_id !== $workspace->id) {
-            throw WorkspaceException::noAccessToWorkspace();
-        }
-
-        // Make sure the board list belongs to the board
-        if ($boardList->board_id !== $board->id) {
-            throw WorkspaceException::noAccessToWorkspace();
-        }
-
-        $taskUuIds = $request->get('uuids');
-
-        $tasks = Task::query()->whereIn('uuid', $taskUuIds)->get('id');
-
-        if (count($tasks) !== count($taskUuIds)) {
-            return response()->json(['error' => 'Invalid task UUIDs'], Response::HTTP_BAD_REQUEST);
-        }
-
-        $position = 1;
-        foreach ($taskUuIds as $taskUuId) {
-            $task = Task::query()->where('uuid', '=', $taskUuId)->first();
-            if (!$task) {
-                continue;
-            }
-            $task->position = $position;
-            $task->saveOrFail();
-            $position++;
-        }
+        (new BoardListReorderTasksService())->reorderTasks($workspace, $board, $boardList, $request);
 
         return response()->json(null, Response::HTTP_OK);
     }
 
+    /**
+     * @throws Throwable
+     * @throws WorkspaceException
+     */
+    public function reorderLists(Workspace $workspace, Board $board, Request $request): JsonResponse
+    {
+        (new BoardListReorderService())->reorderBoardList($workspace, $board, $request);
+
+        return response()->json(null, Response::HTTP_OK);
+    }
+
+    /**
+     * @throws Throwable
+     * @throws WorkspaceException
+     */
     public function moveTask(Workspace $workspace, Board $board, Request $request): JsonResponse
     {
-        // Ensure the user has access to this workspace
-        if (!WorkspacePermissionService::userHasAccessToWorkspace(auth()->user(), $workspace)) {
-            throw WorkspaceException::noAccessToWorkspace();
-        }
+        $response = (new BoardListMoveTaskService())->moveTask($workspace, $board, $request);
 
-        // Make sure the board belongs to the workspace
-        if ($board->workspace_id !== $workspace->id) {
-            throw WorkspaceException::noAccessToWorkspace();
-        }
-
-        // Get the from list
-        $fromList = $request->get('fromListUuId');
-        // Get the to list
-        $toList = $request->get('toListUuId');
-
-        $fromList = BoardList::query()->where('uuid', '=', $fromList)->firstOrFail();
-        $toList = BoardList::query()->where('uuid', '=', $toList)->firstOrFail();
-
-        // Make sure the board lists belong to the board
-        if ($fromList->board_id !== $board->id || $toList->board_id !== $board->id) {
-            throw WorkspaceException::noAccessToWorkspace();
-        }
-
-        // Get the list of tasks from the from list
-        $fromListUuIds = $request->get('fromListUuIds');
-        // Get the list of tasks from the to list
-        $toListUuIds = $request->get('toListUuIds');
-
-        // Make sure all the from tasks exist
-        $fromTasks = Task::query()->whereIn('uuid', $fromListUuIds)->get('id');
-        if (count($fromTasks) !== count($fromListUuIds)) {
-            return response()->json(['error' => 'Invalid task UUIDs'], Response::HTTP_BAD_REQUEST);
-        }
-
-        // Make sure all the to tasks exist
-        $toTasks = Task::query()->whereIn('uuid', $toListUuIds)->get('id');
-        if (count($toTasks) !== count($toListUuIds)) {
-            return response()->json(['error' => 'Invalid task UUIDs'], Response::HTTP_BAD_REQUEST);
-        }
-
-        $position = 1;
-        foreach ($fromListUuIds as $taskUuId) {
-            $task = Task::query()->where('uuid', '=', $taskUuId)->first();
-            if (!$task) {
-                continue;
-            }
-            $task->position = $position;
-            $task->board_list_id = $fromList->id;
-            $task->saveOrFail();
-            $position++;
-        }
-
-        $position = 1;
-        foreach ($toListUuIds as $taskUuId) {
-            $task = Task::query()->where('uuid', '=', $taskUuId)->first();
-            if (!$task) {
-                continue;
-            }
-            $task->position = $position;
-            $task->board_list_id = $toList->id;
-            $task->saveOrFail();
-            $position++;
+        if ($response !== null) {
+            return $response;
         }
 
         return response()->json(null, Response::HTTP_OK);
@@ -205,13 +105,15 @@ class BoardListController extends Controller
      * @param Workspace $workspace
      * @param Board $board
      * @param BoardList $boardList
-     * @return Response
+     * @return JsonResponse
      * @throws Throwable
      * @throws WorkspaceException
      */
     public function update(UpdateBoardListRequest $request, Workspace $workspace, Board $board, BoardList $boardList)
     {
         (new BoardListUpdateService())->updateBoardList($workspace, $board, $boardList, $request->validated());
+
+        return response()->json(new BoardListResource($boardList), Response::HTTP_OK);
     }
 
     /**

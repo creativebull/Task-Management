@@ -2,11 +2,13 @@
 
 namespace App\Core\Services\BoardList;
 
+use App\Core\Services\Auth\AuthHelper;
 use App\Core\Services\Workspace\WorkspacePermissionService;
 use App\Exceptions\WorkspaceException;
 use App\Models\Board;
 use App\Models\BoardList;
 use App\Models\Workspace;
+use Illuminate\Http\Request;
 use Throwable;
 
 class BoardListReorderService
@@ -14,25 +16,34 @@ class BoardListReorderService
     /**
      * @param Workspace $workspace
      * @param Board $board
-     * @param BoardList $boardList
-     * @param int $position
+     * @param Request $request
      * @return $this
-     * @throws WorkspaceException
      * @throws Throwable
+     * @throws WorkspaceException
      */
-    public function reorderBoardList(Workspace $workspace, Board $board, BoardList $boardList, int $position): self
+    public function reorderBoardList(Workspace $workspace, Board $board, Request $request): self
     {
-        // Make sure the user has access to this workspace
-        if (!WorkspacePermissionService::userHasAccessToWorkspace(auth()->user(), $workspace)) {
+        // Ensure the user has access to this workspace
+        if (!WorkspacePermissionService::userHasAccessToWorkspace(AuthHelper::getLoggedInUser(), $workspace)) {
             throw WorkspaceException::noAccessToWorkspace();
         }
 
-        // Make sure the board belongs to the workspace
+        // Ensure the board belongs to the workspace
         if ($board->workspace_id !== $workspace->id) {
             throw WorkspaceException::noAccessToWorkspace();
         }
 
-        // TODO - Implement reorderBoardList() method.
+        $boardLists = $request->get('boardLists');
+        $position = 1;
+        foreach ($boardLists as $boardList) {
+            $boardListModel = BoardList::query()->where('uuid', '=', $boardList)->first();
+            if (!$boardListModel) {
+                continue;
+            }
+            $boardListModel->position = $position;
+            $boardListModel->saveOrFail();
+            $position++;
+        }
 
         return $this;
     }
