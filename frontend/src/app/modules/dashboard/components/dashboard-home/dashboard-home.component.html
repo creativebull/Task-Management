@@ -1,1 +1,9 @@
 <app-main-header [header]="'Dashboard'" [breadCrumbs]="breadCrumbs"></app-main-header>
+
+
+<textarea [(ngModel)]="markdownInput" class="form-control" rows="10" style="resize: vertical;"></textarea>
+
+<markdown emoji lineNumbers [data]="markdownInput">
+</markdown>
+
+<button class="btn btn-primary" (click)="showOutput();">test</button>

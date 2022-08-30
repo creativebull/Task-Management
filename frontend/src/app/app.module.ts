@@ -15,6 +15,7 @@ import {ToastrModule} from 'ngx-toastr';
 import {SweetAlert2Module} from '@sweetalert2/ngx-sweetalert2';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {SortablejsModule} from 'ngx-sortablejs';
+import {MarkdownModule, MarkedOptions} from 'ngx-markdown';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,18 @@ import {SortablejsModule} from 'ngx-sortablejs';
       ))
     }),
     SortablejsModule.forRoot({animation: 150}),
+    MarkdownModule.forRoot({
+      markedOptions: {
+        provide: MarkedOptions,
+        useValue: {
+          gfm: true,
+          breaks: false,
+          pedantic: false,
+          smartLists: true,
+          smartypants: false,
+        },
+      },
+    }),
     UserModule,
     AppRoutingModule
   ],

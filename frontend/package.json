@@ -27,6 +27,7 @@
     "datatables.net-bs5": "^1.12.1",
     "datatables.net-dt": "^1.12.1",
     "moment": "^2.29.3",
+    "ngx-markdown": "^14.0.1",
     "ngx-sortablejs": "^11.1.0",
     "ngx-toastr": "^15.0.0",
     "pace-js": "^1.2.4",
