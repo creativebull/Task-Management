@@ -1,6 +1,6 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {WorkspaceService} from '../../../../services/workspace.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {TasksService} from '../../../../services/tasks.service';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {ToastrService} from 'ngx-toastr';
@@ -13,6 +13,7 @@ import {BoardList} from '../../../../interfaces/board-list';
 import {WorkspaceMember} from '../../../../interfaces/workspace-member';
 import {Board} from '../../../../interfaces/board';
 import {BoardService} from '../../../../services/board.service';
+import {TaskDetailsFull} from '../../../../interfaces/task-details-full';
 
 @UntilDestroy()
 @Component({
@@ -26,6 +27,7 @@ export class BoardDetailsComponent implements OnInit {
   loadingBoardDetails = true;
   loadingBoardListsAndTasks = true;
 
+
   constructor(
     private workspaceService: WorkspaceService,
     private route: ActivatedRoute,
@@ -34,6 +36,7 @@ export class BoardDetailsComponent implements OnInit {
     private boardListService: BoardListService,
     private workspaceMembersService: WorkspaceMembersService,
     private boardService: BoardService,
+    private router: Router,
   ) {
   }
 
@@ -68,7 +71,7 @@ export class BoardDetailsComponent implements OnInit {
     group: 'board-lists',
     easing: "cubic-bezier(1, 0, 0, 1)",
     dataIdAttr: 'data-uuid',
-    onEnd: (evt) => {
+    onEnd: () => {
       this.reorderBoardLists();
     }
   }
@@ -89,16 +92,23 @@ export class BoardDetailsComponent implements OnInit {
   @ViewChild('closeNewTaskModalBtn') closeNewTaskModalBtn!: ElementRef
   @ViewChild('closeNewTaskListBtn') closeNewTaskListBtn!: ElementRef
   @ViewChild('closeBoardSettingsModalBtn') closeBoardSettingsModalBtn!: ElementRef
+  @ViewChild('closeTaskDetailsModal') closeTaskDetailsModal!: ElementRef;
 
   loadingBoardSettingsForm = true;
   boardSettingsForm!: FormGroup;
 
   boardListEditIndex?: number;
 
+  loadingTaskDetails = true;
+  taskDetails!: TaskDetailsFull | null;
+  savingTaskDetails = false;
+
+  taskDetailsForm!: FormGroup;
+
   ngOnInit(): void {
-    this.workspaceService.activeWorkspace?.subscribe(workspace => {
+    this.workspaceService.activeWorkspace?.pipe(untilDestroyed(this)).subscribe(workspace => {
         this.activeWorkspace = workspace;
-        this.route.params.subscribe(params => {
+        this.route.params.pipe(untilDestroyed(this)).subscribe(params => {
           this.boardUuid = params['uuid'];
           this.loadBoardListsAndTasks();
           this.loadWorkspaceMembers();
@@ -149,7 +159,7 @@ export class BoardDetailsComponent implements OnInit {
   submitNewTask() {
     this.savingNewTask = true;
     this.taskService.createTask(this.activeWorkspace.uuid, this.boardUuid, this.activeListUuId, this.newTaskForm.value).pipe(untilDestroyed(this)).subscribe({
-      next: (task) => {
+      next: () => {
         this.toastrService.success('Task created successfully');
         this.loadBoardListsAndTasks();
         this.closeNewTaskModalBtn.nativeElement.click();
@@ -178,7 +188,7 @@ export class BoardDetailsComponent implements OnInit {
     this.savingNewList = true;
 
     this.boardListService.createBoardList(this.activeWorkspace.uuid, this.boardUuid, this.newListForm.value).pipe(untilDestroyed(this)).subscribe({
-      next: (list) => {
+      next: () => {
         this.toastrService.success('List created successfully');
         this.loadBoardListsAndTasks();
         this.savingNewList = false;
@@ -202,7 +212,7 @@ export class BoardDetailsComponent implements OnInit {
       };
 
       this.boardListService.reorderBoardList(this.activeWorkspace.uuid, this.boardUuid, postData, listUuId).pipe(untilDestroyed(this)).subscribe({
-        next: (list) => {
+        next: () => {
           this.toastrService.success('List reordered successfully');
           this.loadBoardListsAndTasks();
         }
@@ -226,7 +236,7 @@ export class BoardDetailsComponent implements OnInit {
     }
 
     this.boardListService.moveTask(this.activeWorkspace.uuid, this.boardUuid, postData).pipe(untilDestroyed(this)).subscribe({
-      next: (task) => {
+      next: () => {
         this.toastrService.success('Task moved successfully');
         this.loadBoardListsAndTasks();
       }
@@ -234,11 +244,54 @@ export class BoardDetailsComponent implements OnInit {
   }
 
   loadTaskDetails(taskUuId: string) {
-    console.log(taskUuId);
+    this.taskDetails = null;
+    this.loadingTaskDetails = true;
+    this.taskService.taskDetails(taskUuId).pipe(untilDestroyed(this)).subscribe({
+      next: (task) => {
+
+        this.taskDetails = task;
+        this.initTaskDetailsForm();
+        this.loadingTaskDetails = false;
+      },
+      error: (err) => {
+        this.toastrService.error(err.error.message);
+        this.loadingTaskDetails = false;
+      }
+    });
+  }
+
+  initTaskDetailsForm() {
+    this.loadWorkspaceMembers();
+    if (this.taskDetails !== null) {
+      this.taskDetailsForm = new FormGroup({
+        name: new FormControl(this.taskDetails.name),
+        description: new FormControl(this.taskDetails.description),
+        assigned_to: new FormControl(this.taskDetails.assigned_to.uuid)
+      });
+    }
+  }
+
+  submitTaskDetails() {
+    this.savingTaskDetails = true;
+    if (this.taskDetails === null) {
+      this.toastrService.error('Failed to save task, An active task was not detected');
+      return;
+    }
+
+    this.taskService.updateTask(this.taskDetails?.uuid, this.taskDetailsForm.value).pipe(untilDestroyed(this)).subscribe({
+      next: () => {
+        this.toastrService.success('Task updated successfully');
+        this.savingTaskDetails = false;
+        this.loadBoardListsAndTasks();
+      },
+      error: (err: any) => {
+        this.toastrService.error(err.error.message);
+        this.savingTaskDetails = false;
+      }
+    });
   }
 
   boardSettingsClick() {
-    console.log('Board Settings Clicked');
     this.loadingBoardSettingsForm = true;
     this.boardSettingsForm = new FormGroup({
       name: new FormControl(this.activeBoard.name),
@@ -270,7 +323,6 @@ export class BoardDetailsComponent implements OnInit {
   }
 
   updateBoardListNameClick(indexOfBoardList: number) {
-    console.log(indexOfBoardList);
     this.boardListEditIndex = indexOfBoardList;
   }
 
@@ -283,7 +335,7 @@ export class BoardDetailsComponent implements OnInit {
     formData.append('name', board.name);
 
     this.boardListService.updateBoardList(this.activeWorkspace.uuid, this.activeBoard.uuid, board.uuid, formData).pipe(untilDestroyed(this)).subscribe({
-      next: (list) => {
+      next: () => {
         this.toastrService.success('List updated successfully');
       }
     });
@@ -291,7 +343,7 @@ export class BoardDetailsComponent implements OnInit {
 
   deleteBoardList(boardList: BoardList) {
     this.boardListService.deleteBoardList(this.activeWorkspace.uuid, this.activeBoard.uuid, boardList.uuid).pipe(untilDestroyed(this)).subscribe({
-      next: (list) => {
+      next: () => {
         this.toastrService.success('List deleted successfully');
         this.loadBoardListsAndTasks();
       },
@@ -301,8 +353,7 @@ export class BoardDetailsComponent implements OnInit {
     });
   }
 
-  reorderBoardLists()
-  {
+  reorderBoardLists() {
     // Create a nice simple array of the uuids of the lists
     const listUuids = this.boardLists.map(list => list.uuid);
 
@@ -311,10 +362,39 @@ export class BoardDetailsComponent implements OnInit {
     }
 
     return this.boardListService.reorderBoardLists(this.activeWorkspace.uuid, this.activeBoard.uuid, postData).pipe(untilDestroyed(this)).subscribe({
-      next: (list) => {
+      next: () => {
         this.toastrService.success('Lists reordered successfully');
         this.loadBoardListsAndTasks();
       }
     });
+  }
+
+  deleteBoardClick() {
+    this.boardService.deleteBoard(this.boardUuid, this.activeWorkspace.uuid).pipe(untilDestroyed(this)).subscribe({
+      next: () => {
+        this.router.navigate(['/boards']);
+      }
+    });
+  }
+
+  deleteTask(uuid: string | undefined) {
+    if (typeof uuid === 'undefined') {
+      this.toastrService.error('Failed to delete task, Please try again');
+      return;
+    }
+    this.taskService.deleteTask(uuid).pipe(untilDestroyed(this)).subscribe({
+      next: () => {
+        this.toastrService.success('Task deleted');
+
+        // Reload all the tasks
+        this.loadBoardListsAndTasks();
+
+        // Close the task details modal
+        this.closeTaskDetailsModal.nativeElement.click();
+      },
+      error: (err) => {
+        this.toastrService.error(err.error.message);
+      }
+    })
   }
 }

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Core\Services;
+namespace App\Core\Services\Task;
 
+use App\Core\Services\Auth\AuthHelper;
 use App\Core\Services\Workspace\WorkspacePermissionService;
 use App\Exceptions\UserException;
 use App\Exceptions\WorkspaceException;
@@ -27,22 +28,15 @@ class TaskAddService
      */
     public function addNewTask(StoreTaskRequest $request, Workspace $workspace, Board $board, BoardList $boardList): Task
     {
-        // Make sure the user has access to the workspace
-        if (!WorkspacePermissionService::userHasAccessToWorkspace(auth()->user(), $workspace)) {
-            throw WorkspaceException::noAccessToWorkspace();
-        }
-
-        // Make sure the board belongs to the workspace
-        if ($board->workspace_id !== $workspace->id) {
-            throw WorkspaceException::noAccessToWorkspace();
-        }
-
         $validated = $request->validated();
 
         if (strtolower($validated['assigned_to']) === 'current user') {
             $validated['assigned_to'] = auth()->user()->id;
+        } elseif (strtolower($validated['assigned_to']) === '') {
+            $validated['assigned_to'] = null;
         } else {
             // Make sure the user passed exists
+            /** @var User $user */
             $user = User::query()->where('uuid', '=', $validated['assigned_to'])->firstOrFail();
 
             // Make sure the user has access to the workspace

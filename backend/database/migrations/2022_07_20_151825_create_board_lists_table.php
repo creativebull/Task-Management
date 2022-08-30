@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('board_id');
             $table->string('name');
             $table->unsignedBigInteger('position')->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

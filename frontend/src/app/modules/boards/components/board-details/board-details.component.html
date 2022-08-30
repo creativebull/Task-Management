@@ -1,5 +1,9 @@
-<app-main-header [header]="activeBoard.name" [subHeader]="activeBoard.description" [breadCrumbs]="breadCrumbs"
-                 *ngIf="!loadingBoardDetails"></app-main-header>
+<app-main-header
+  [header]="activeBoard.name"
+  [subHeader]="activeBoard.description"
+  [breadCrumbs]="breadCrumbs"
+  *ngIf="!loadingBoardDetails"
+></app-main-header>
 
 <div class="row mb-4">
   <div class="col-12 text-end">
@@ -13,11 +17,19 @@
     </a>
     <a
       (click)="addNewListClick()"
-      class="btn btn-primary btn-sm"
+      class="btn btn-primary btn-sm btn-mr"
       data-bs-toggle="modal"
       data-bs-target="#newBoardListModal"
     >
       <span class="fa fa-list"></span> Add List
+    </a>
+
+    <a
+      class="btn btn-danger btn-sm"
+      [swal]="{ title: 'Are you sure?', text: 'All tasks in this board will be deleted', showCancelButton: true }"
+      (confirm)="deleteBoardClick()"
+    >
+      <span class="fa fa-trash"></span> Delete Board
     </a>
   </div>
 </div>
@@ -150,14 +162,70 @@
 
 <!-- Task details modal -->
 <div class="modal fade" id="taskDetailsModal" tabindex="-1" aria-labelledby="tasksDetailsModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-fullscreen">
+  <div class="modal-dialog modal-lg modal-fullscreen-lg-down">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="tasksDetailsModalLabel">Task Details</h5>
+        <h5 class="modal-title" id="tasksDetailsModalLabel">
+          <span *ngIf="loadingTaskDetails">Task Details</span>
+          <span *ngIf="!loadingTaskDetails">{{taskDetails?.name}}</span>
+        </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        Task Details
+        <spinner [show]="loadingTaskDetails"></spinner>
+        <div *ngIf="!loadingTaskDetails">
+
+          <form [formGroup]="taskDetailsForm" (ngSubmit)="submitTaskDetails()">
+            <div class="mb-3">
+              <label for="taskName" class="form-label">Title</label>
+              <input type="text" class="form-control" id="name" aria-describedby="taskName" formControlName="name">
+            </div>
+
+            <div class="mb-3">
+              <label for="taskDescription" class="form-label">Task Description</label>
+              <textarea
+                class="form-control"
+                id="taskDescriptionInput"
+                style="resize: vertical;"
+                formControlName="description"></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label for="taskAssignedUser" class="form-label">Assigned</label>
+              <select class="form-control" id="taskAssignedUserInput" formControlName="assigned_to">
+                <option value="current user">Current User</option>
+                <option
+                  *ngFor="let member of workspaceMembers"
+                  [value]="member.user.uuid"
+                  [selected]="member.user?.uuid === taskDetails?.assigned_to?.uuid"
+                >{{member.user.name}}</option>
+              </select>
+            </div>
+
+            <div class="row">
+              <div class="col-6">
+                <button type="submit" class="btn btn-success" [disabled]="savingTaskDetails">
+                  <spinner [show]="savingTaskDetails"></spinner>
+                  Save
+                </button>
+              </div>
+
+              <div class="col-6 text-xl-end text-lg-end text-md-end text-sm-start">
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  [disabled]="savingTaskDetails"
+                  [swal]="{ title: 'Are you sure?', text: 'This task will be deleted!!', showCancelButton: true }"
+                  (confirm)="deleteTask(taskDetails?.uuid)"
+                >
+                  <span class="fa fa-trash"></span>
+                  Delete
+                </button>
+              </div>
+            </div>
+
+          </form>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" #closeTaskDetailsModal>
@@ -213,6 +281,11 @@
           </div>
 
           <div class="tab-pane fade" id="nav-board-lists" role="tabpanel" aria-labelledby="nav-board-lists-tab">
+
+            <div class="alert alert-info mt-1">
+              <span class="fa fa-info"></span> Drag lists to reorder
+            </div>
+
             <spinner [show]="loadingBoardListsAndTasks"></spinner>
 
             <div

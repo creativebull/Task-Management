@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('workspaceInvite:cleanup')->hourly();
+        $schedule->command('cleanup:soft_deletes')->daily();
     }
 
     /**

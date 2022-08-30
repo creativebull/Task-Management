@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Core\Services\TaskAddService;
+use App\Core\Services\Task\TaskAddService;
+use App\Core\Services\Task\TaskDeleteService;
+use App\Core\Services\Task\TaskUpdateService;
+use App\Exceptions\BoardException;
 use App\Exceptions\WorkspaceException;
 use App\Http\Requests\Tasks\StoreTaskRequest;
 use App\Http\Requests\Tasks\UpdateTaskRequest;
@@ -60,12 +63,13 @@ class TaskController extends Controller
      * @param UpdateTaskRequest $request
      * @param Task $task
      * @return JsonResponse
+     * @throws WorkspaceException
      */
     public function update(UpdateTaskRequest $request, Task $task): JsonResponse
     {
-        $task->update($request->validated());
+        (new TaskUpdateService())->updateTask($request, $task->boardList->board->workspace, $task);
 
-        return response()->json(new TaskResource($task), 200);
+        return response()->json(new TaskResource($task));
     }
 
     /**
@@ -73,9 +77,13 @@ class TaskController extends Controller
      *
      * @param Task $task
      * @return JsonResponse
+     * @throws Throwable
+     * @throws WorkspaceException
+     * @throws BoardException
      */
     public function destroy(Task $task): JsonResponse
     {
+        (new TaskDeleteService())->deleteTask($task);
         $task->delete();
 
         return response()->json(null, 204);

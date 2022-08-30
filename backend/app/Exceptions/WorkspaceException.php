@@ -57,6 +57,6 @@ class WorkspaceException extends CustomBaseException
      */
     public static function noAccessToWorkspace() :WorkspaceException
     {
-        return new self('You dont have access to this workspace', ['workspace' => trans('workspace.no_access')]);
+        return new self('You don\'t have access to this workspace', ['workspace' => trans('workspace.no_access')]);
     }
 }

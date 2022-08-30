@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Tasks;
 
+use App\Core\Services\Auth\AuthHelper;
+use App\Core\Services\Workspace\WorkspacePermissionService;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateTaskRequest extends FormRequest
@@ -11,9 +13,17 @@ class UpdateTaskRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return false;
+        $task = $this->route('task');
+        $workspace = $task->boardList->board->workspace;
+
+        // Check if the user has access to this workspace
+        if (!WorkspacePermissionService::userHasAccessToWorkspace(AuthHelper::getLoggedInUser(), $workspace)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -21,10 +31,12 @@ class UpdateTaskRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'assigned_to' => ['nullable'],
         ];
     }
 }

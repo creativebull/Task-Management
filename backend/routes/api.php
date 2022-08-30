@@ -67,6 +67,12 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('{workspace:uuid}/members', [WorkspaceMembersController::class, 'index'])->name('workspace-members.index');
     });
 
+    Route::prefix('tasks')->group(function () {
+        Route::get('{task:uuid}', [TaskController::class, 'show'])->name('tasks.show');
+        Route::put('{task:uuid}', [TaskController::class, 'update'])->name('tasks.update');
+        Route::delete('{task:uuid}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+    });
+
     Route::prefix('workspace-members')->group(function () {
         Route::post('invite', [WorkspaceMembersController::class, 'invite'])->name('workspace-members.invite');
         Route::get('accept/{workspaceInvite:token}', [WorkspaceMembersController::class, 'accept'])->name('workspace-members.accept');

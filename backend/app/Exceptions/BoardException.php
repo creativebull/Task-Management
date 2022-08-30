@@ -19,4 +19,9 @@ class BoardException extends CustomBaseException
     {
         return new self('Board with that name already exists', ['board' => trans('board.already_exists')]);
     }
+
+    public static function noAccessToBoard(): self
+    {
+        return new self('You do not have access to this board', ['board' => trans('board.no_access')]);
+    }
 }

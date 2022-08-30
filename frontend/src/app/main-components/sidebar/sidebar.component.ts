@@ -3,6 +3,7 @@ import {environment} from '../../../environments/environment';
 import {WorkspaceService} from '../../services/workspace.service';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {Workspace} from '../../interfaces/workspace';
+import {Router} from '@angular/router';
 
 @UntilDestroy()
 @Component({
@@ -14,7 +15,9 @@ export class SidebarComponent implements OnInit {
   appName = environment.appName;
   activeWorkspace?: Workspace;
 
-  constructor(private workspaceService: WorkspaceService) {
+  constructor(
+    private workspaceService: WorkspaceService,
+    private router: Router) {
   }
 
   workspaces: Workspace[] = [];
@@ -43,6 +46,8 @@ export class SidebarComponent implements OnInit {
   }
 
   selectWorkspace(workspace: Workspace) {
-    this.workspaceService.setActiveWorkspace(workspace)
+    this.workspaceService.setActiveWorkspace(workspace);
+    this.router.navigate(['/boards']).then(r => {
+    });
   }
 }

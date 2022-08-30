@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->string('color')->nullable();
             $table->string('icon')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
