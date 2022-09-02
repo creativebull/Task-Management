@@ -10,6 +10,7 @@ import { BoardDetailsComponent } from './components/board-details/board-details.
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {SortablejsModule} from 'ngx-sortablejs';
 import {SweetAlert2Module} from '@sweetalert2/ngx-sweetalert2';
+import {MarkdownModule} from 'ngx-markdown';
 
 @NgModule({
   imports: [
@@ -20,6 +21,7 @@ import {SweetAlert2Module} from '@sweetalert2/ngx-sweetalert2';
     SortablejsModule,
     FormsModule,
     SweetAlert2Module,
+    MarkdownModule,
   ],
   declarations: [
     BoardsHomeComponent,

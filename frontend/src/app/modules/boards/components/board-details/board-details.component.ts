@@ -26,7 +26,7 @@ export class BoardDetailsComponent implements OnInit {
   workspaceMembers?: WorkspaceMember[];
   loadingBoardDetails = true;
   loadingBoardListsAndTasks = true;
-
+  taskDescriptionEditBox: boolean = false;
 
   constructor(
     private workspaceService: WorkspaceService,
@@ -104,6 +104,7 @@ export class BoardDetailsComponent implements OnInit {
   savingTaskDetails = false;
 
   taskDetailsForm!: FormGroup;
+  taskMarkdownText!: string;
 
   ngOnInit(): void {
     this.workspaceService.activeWorkspace?.pipe(untilDestroyed(this)).subscribe(workspace => {
@@ -251,6 +252,7 @@ export class BoardDetailsComponent implements OnInit {
 
         this.taskDetails = task;
         this.initTaskDetailsForm();
+        this.taskMarkdownText = this.taskDetails.description;
         this.loadingTaskDetails = false;
       },
       error: (err) => {
@@ -396,5 +398,17 @@ export class BoardDetailsComponent implements OnInit {
         this.toastrService.error(err.error.message);
       }
     })
+  }
+
+  upDateTaskMarkdownPreviewText() {
+    if(!this.taskDetailsForm) {
+      return;
+    }
+    this.taskMarkdownText = this.taskDetailsForm.get('description')?.value;
+
+  }
+
+  toggleTaskDescriptionEditBox() {
+    this.taskDescriptionEditBox = !this.taskDescriptionEditBox;
   }
 }

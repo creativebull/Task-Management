@@ -187,7 +187,23 @@
                 class="form-control"
                 id="taskDescriptionInput"
                 style="resize: vertical;"
-                formControlName="description"></textarea>
+                formControlName="description"
+                (keyup)="upDateTaskMarkdownPreviewText()"
+                rows="8"
+                [hidden]="!taskDescriptionEditBox"
+              ></textarea>
+
+              <markdown emoji lineNumbers [data]="taskMarkdownText">
+              </markdown>
+
+              <button type="button" class="btn btn-primary btn-sm" (click)="toggleTaskDescriptionEditBox()" [hidden]="taskDescriptionEditBox">
+                <span class="fa fa-pen"></span> Edit
+              </button>
+
+              <button type="button" class="btn btn-danger btn-sm" (click)="toggleTaskDescriptionEditBox()" [hidden]="!taskDescriptionEditBox">
+                <span class="fa fa-times"></span> Close Edit
+              </button>
+
             </div>
 
             <div class="mb-3">
