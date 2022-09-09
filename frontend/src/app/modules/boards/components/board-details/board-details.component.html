@@ -192,18 +192,21 @@
                 rows="8"
                 [hidden]="!taskDescriptionEditBox"
               ></textarea>
-
-              <markdown emoji lineNumbers [data]="taskMarkdownText">
-              </markdown>
-
-              <button type="button" class="btn btn-primary btn-sm" (click)="toggleTaskDescriptionEditBox()" [hidden]="taskDescriptionEditBox">
+              <br/>
+              <button type="button" class="btn btn-primary btn-sm mt-1" (click)="toggleTaskDescriptionEditBox()" [hidden]="taskDescriptionEditBox">
                 <span class="fa fa-pen"></span> Edit
               </button>
 
-              <button type="button" class="btn btn-danger btn-sm" (click)="toggleTaskDescriptionEditBox()" [hidden]="!taskDescriptionEditBox">
+              <button type="button" class="btn btn-danger btn-sm mt-1" (click)="toggleTaskDescriptionEditBox()" [hidden]="!taskDescriptionEditBox">
                 <span class="fa fa-times"></span> Close Edit
               </button>
 
+            
+            <!-- Box with bootstrap 5 border-->
+            <div class="border border-1 p-3 mt-1">
+              <markdown emoji lineNumbers [data]="taskMarkdownText">
+              </markdown>
+              </div>
             </div>
 
             <div class="mb-3">
@@ -216,6 +219,18 @@
                   [selected]="member.user?.uuid === taskDetails?.assigned_to?.uuid"
                 >{{member.user.name}}</option>
               </select>
+            </div>
+
+            <div class="mb-3">
+              <div class="row">
+                <div class="col-sm-6">
+                  <span class="text-muted">Created: {{taskDetails?.created_at | date: 'medium'}}</span>
+                </div>
+
+                <div class="col-sm-6">
+                 <span class="text-muted"> Last Updated: {{taskDetails?.updated_at | date: 'medium'}}</span>
+                </div>
+              </div>
             </div>
 
             <div class="row">
