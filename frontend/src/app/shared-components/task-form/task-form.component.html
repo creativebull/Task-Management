@@ -1,0 +1,97 @@
+<spinner [show]="loadingTaskDetailsForm"></spinner>
+
+<div class="alert alert-danger" *ngFor="let error of errors">
+  {{error}}
+</div>
+
+<form [formGroup]="taskDetailsForm" (ngSubmit)="submitTaskDetails()" *ngIf="!loadingTaskDetailsForm">
+  <div class="mb-3">
+    <label for="taskName" class="form-label">Title</label>
+    <input type="text" class="form-control" id="taskName" aria-describedby="taskName" formControlName="name">
+  </div>
+
+  <div class="mb-3">
+    <label for="taskDescription" class="form-label">Task Description</label>
+    <textarea
+      class="form-control"
+      id="taskDescription"
+      style="resize: vertical;"
+      formControlName="description"
+      (keyup)="upDateTaskMarkdownPreviewText()"
+      rows="8"
+      [hidden]="!taskDescriptionEditBox"
+    ></textarea>
+    <br/>
+    <button type="button" class="btn btn-primary btn-sm mt-1" (click)="toggleTaskDescriptionEditBox()"
+            [hidden]="taskDescriptionEditBox">
+      <span class="fa fa-pen"></span> Edit
+    </button>
+
+    <button type="button" class="btn btn-danger btn-sm mt-1" (click)="toggleTaskDescriptionEditBox()"
+            [hidden]="!taskDescriptionEditBox">
+      <span class="fa fa-times"></span> Close Edit
+    </button>
+
+
+    <!-- Box with bootstrap 5 border-->
+    <div class="border border-1 p-3 mt-1">
+      <markdown emoji lineNumbers [data]="taskMarkdownText">
+      </markdown>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label for="taskAssignedUser" class="form-label">Assigned</label>
+    <select class="form-control" id="taskAssignedUser" formControlName="assigned_to">
+      <option value="current user">Current User</option>
+      <option
+        *ngFor="let member of workspaceMembers"
+        [value]="member.user.uuid"
+        [selected]="member.user.uuid === taskDetails?.assigned_to?.uuid"
+      >{{member.user.name}}</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <div class="row">
+      <div class="col-sm-6">
+        <span
+          class="text-muted"
+          *ngIf="taskDetails?.created_at"
+        >Created: {{taskDetails?.created_at | date: 'medium'}}</span>
+      </div>
+
+      <div class="col-sm-6">
+        <span
+          class="text-muted"
+          *ngIf="taskDetails?.updated_at"
+        > Last Updated: {{taskDetails?.updated_at | date: 'medium'}}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-6">
+      <button type="submit" class="btn btn-success" [disabled]="savingTaskDetails">
+        <spinner [show]="savingTaskDetails"></spinner>
+        Save
+      </button>
+    </div>
+
+    <div class="col-6 text-xl-end text-lg-end text-md-end text-sm-start">
+      <button
+        type="button"
+        class="btn btn-danger"
+        [disabled]="savingTaskDetails"
+        [swal]="{ title: 'Are you sure?', text: 'This task will be deleted!!', showCancelButton: true }"
+        (confirm)="deleteTask(taskDetails?.uuid)"
+        [hidden]="!taskDetails?.uuid"
+      >
+        <span class="fa fa-trash"></span>
+        Delete
+      </button>
+    </div>
+  </div>
+
+</form>
+

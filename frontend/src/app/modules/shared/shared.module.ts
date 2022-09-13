@@ -6,10 +6,14 @@ import {RouterModule} from '@angular/router';
 import {LoadingSpinnerComponent} from '../../main-components/loading-spinner/loading-spinner.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {TruncatePipe} from '../../pipes/truncate.pipe';
+import {TaskFormComponent} from '../../shared-components/task-form/task-form.component';
+import {MarkdownModule} from 'ngx-markdown';
+import {SweetAlert2Module} from '@sweetalert2/ngx-sweetalert2';
 
 const importsAndExports = [
   MainHeaderComponent,
   LoadingSpinnerComponent,
+  TaskFormComponent,
   TruncatePipe,
 ];
 
@@ -20,6 +24,8 @@ const importsAndExports = [
     RouterModule,
     DataTablesModule,
     ReactiveFormsModule,
+    MarkdownModule,
+    SweetAlert2Module,
   ],
   exports: importsAndExports,
   providers: []

@@ -66,9 +66,9 @@
               <span class="grab-handle fa fa-grip-lines"></span>
               &nbsp;
               <a
-                (click)="loadTaskDetails(task.uuid)"
+                (click)="editTaskClick(task.uuid)"
                 data-bs-toggle="modal"
-                data-bs-target="#taskDetailsModal"
+                data-bs-target="#taskModal"
                 class=""
               >{{task.name}}</a>
             </div>
@@ -76,54 +76,11 @@
         </div>
       </div>
 
-      <a href="#" (click)="addTaskClick(taskList.uuid)" data-bs-toggle="modal" data-bs-target="#newTaskModal">
+      <a href="#" (click)="addTaskClick(taskList.uuid)" data-bs-toggle="modal" data-bs-target="#taskModal">
         + Add New Task</a>
     </div>
   </div>
 </div>
-
-<!-- Add Task Modal -->
-<div class="modal fade" id="newTaskModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="newTaskModalLabel">New Task</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <spinner [show]="loadingNewTaskForm"></spinner>
-        <form [formGroup]="newTaskForm" (ngSubmit)="submitNewTask()" *ngIf="!loadingNewTaskForm">
-          <div class="mb-3">
-            <label for="taskName" class="form-label">Title</label>
-            <input type="text" class="form-control" id="taskName" aria-describedby="taskName" formControlName="name">
-            <div id="taskHelp" class="form-text">Give the task a name</div>
-          </div>
-          <div class="mb-3">
-            <label for="taskDescription" class="form-label">Task Description</label>
-            <textarea class="form-control" id="taskDescription" style="resize: vertical;"
-                      formControlName="description"></textarea>
-          </div>
-          <div class="mb-3">
-            <label for="taskAssignedUser" class="form-label">Assigned</label>
-            <select class="form-control" id="taskAssignedUser" formControlName="assigned_to">
-              <option>Current User</option>
-              <option *ngFor="let member of workspaceMembers" [value]="member.user.uuid">{{member.user.name}}</option>
-            </select>
-          </div>
-
-          <button type="submit" class="btn btn-success" [disabled]="savingNewTask">
-            <spinner [show]="savingNewTask"></spinner>
-            Save
-          </button>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" #closeNewTaskModalBtn>Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- End Add Task Modal -->
 
 <!-- Add board list modal -->
 <div class="modal fade" id="newBoardListModal" tabindex="-1" aria-labelledby="newBoardListModalLabel"
@@ -160,113 +117,7 @@
 </div>
 <!-- End Add board list modal -->
 
-<!-- Task details modal -->
-<div class="modal fade" id="taskDetailsModal" tabindex="-1" aria-labelledby="tasksDetailsModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-fullscreen-lg-down">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="tasksDetailsModalLabel">
-          <span *ngIf="loadingTaskDetails">Task Details</span>
-          <span *ngIf="!loadingTaskDetails">{{taskDetails?.name}}</span>
-        </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <spinner [show]="loadingTaskDetails"></spinner>
-        <div *ngIf="!loadingTaskDetails">
 
-          <form [formGroup]="taskDetailsForm" (ngSubmit)="submitTaskDetails()">
-            <div class="mb-3">
-              <label for="taskName" class="form-label">Title</label>
-              <input type="text" class="form-control" id="name" aria-describedby="taskName" formControlName="name">
-            </div>
-
-            <div class="mb-3">
-              <label for="taskDescription" class="form-label">Task Description</label>
-              <textarea
-                class="form-control"
-                id="taskDescriptionInput"
-                style="resize: vertical;"
-                formControlName="description"
-                (keyup)="upDateTaskMarkdownPreviewText()"
-                rows="8"
-                [hidden]="!taskDescriptionEditBox"
-              ></textarea>
-              <br/>
-              <button type="button" class="btn btn-primary btn-sm mt-1" (click)="toggleTaskDescriptionEditBox()" [hidden]="taskDescriptionEditBox">
-                <span class="fa fa-pen"></span> Edit
-              </button>
-
-              <button type="button" class="btn btn-danger btn-sm mt-1" (click)="toggleTaskDescriptionEditBox()" [hidden]="!taskDescriptionEditBox">
-                <span class="fa fa-times"></span> Close Edit
-              </button>
-
-            
-            <!-- Box with bootstrap 5 border-->
-            <div class="border border-1 p-3 mt-1">
-              <markdown emoji lineNumbers [data]="taskMarkdownText">
-              </markdown>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label for="taskAssignedUser" class="form-label">Assigned</label>
-              <select class="form-control" id="taskAssignedUserInput" formControlName="assigned_to">
-                <option value="current user">Current User</option>
-                <option
-                  *ngFor="let member of workspaceMembers"
-                  [value]="member.user.uuid"
-                  [selected]="member.user?.uuid === taskDetails?.assigned_to?.uuid"
-                >{{member.user.name}}</option>
-              </select>
-            </div>
-
-            <div class="mb-3">
-              <div class="row">
-                <div class="col-sm-6">
-                  <span class="text-muted">Created: {{taskDetails?.created_at | date: 'medium'}}</span>
-                </div>
-
-                <div class="col-sm-6">
-                 <span class="text-muted"> Last Updated: {{taskDetails?.updated_at | date: 'medium'}}</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-6">
-                <button type="submit" class="btn btn-success" [disabled]="savingTaskDetails">
-                  <spinner [show]="savingTaskDetails"></spinner>
-                  Save
-                </button>
-              </div>
-
-              <div class="col-6 text-xl-end text-lg-end text-md-end text-sm-start">
-                <button
-                  type="button"
-                  class="btn btn-danger"
-                  [disabled]="savingTaskDetails"
-                  [swal]="{ title: 'Are you sure?', text: 'This task will be deleted!!', showCancelButton: true }"
-                  (confirm)="deleteTask(taskDetails?.uuid)"
-                >
-                  <span class="fa fa-trash"></span>
-                  Delete
-                </button>
-              </div>
-            </div>
-
-          </form>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" #closeTaskDetailsModal>
-          Close
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- End task details modal -->
 
 <!-- Board Settings Modal -->
 <div
@@ -356,3 +207,33 @@
   </div>
 </div>
 <!-- End Board Settings Modal -->
+
+<!-- Add Task Modal -->
+<div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="taskModalLabel">
+          <span *ngIf="!newTask">Edit Task</span>
+          <span *ngIf="newTask">Add Task</span>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <app-task-form
+          [boardListUuId]="activeListUuId"
+          [board]="activeBoard"
+          [taskDetails]="taskDetails"
+          (taskUpdated)="taskUpdated()"
+          (taskCreated)="taskCreated()"
+          (taskDeleted)="taskDeleted()"
+          *ngIf="!loadingTaskDetails"
+        ></app-task-form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" #closeTaskModal>Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Add Task Modal -->

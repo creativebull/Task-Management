@@ -26,7 +26,6 @@ export class BoardDetailsComponent implements OnInit {
   workspaceMembers?: WorkspaceMember[];
   loadingBoardDetails = true;
   loadingBoardListsAndTasks = true;
-  taskDescriptionEditBox: boolean = false;
 
   constructor(
     private workspaceService: WorkspaceService,
@@ -81,18 +80,14 @@ export class BoardDetailsComponent implements OnInit {
     {linkText: 'Boards', routeItems: ['/boards']},
     {linkText: 'Tasks', routeItems: []}
   ];
-  loadingNewTaskForm = true;
-  newTaskForm!: FormGroup;
-  savingNewTask = false;
 
   newListForm!: FormGroup;
   loadingNewListForm = true;
   savingNewList = false;
 
-  @ViewChild('closeNewTaskModalBtn') closeNewTaskModalBtn!: ElementRef
+  @ViewChild('closeTaskModal') closeTaskModal!: ElementRef
   @ViewChild('closeNewTaskListBtn') closeNewTaskListBtn!: ElementRef
   @ViewChild('closeBoardSettingsModalBtn') closeBoardSettingsModalBtn!: ElementRef
-  @ViewChild('closeTaskDetailsModal') closeTaskDetailsModal!: ElementRef;
 
   loadingBoardSettingsForm = true;
   boardSettingsForm!: FormGroup;
@@ -101,10 +96,8 @@ export class BoardDetailsComponent implements OnInit {
 
   loadingTaskDetails = true;
   taskDetails!: TaskDetailsFull | null;
-  savingTaskDetails = false;
 
-  taskDetailsForm!: FormGroup;
-  taskMarkdownText!: string;
+  newTask = false;
 
   ngOnInit(): void {
     this.workspaceService.activeWorkspace?.pipe(untilDestroyed(this)).subscribe(workspace => {
@@ -134,41 +127,21 @@ export class BoardDetailsComponent implements OnInit {
   }
 
   addTaskClick(uuid: string) {
-    this.activeListUuId = uuid;
-    this.initNewTaskForm();
-  }
+    this.loadingTaskDetails = true;
 
-  initNewTaskForm() {
-    this.loadingNewTaskForm = true;
-    this.newTaskForm = new FormGroup({
-      name: new FormControl(''),
-      description: new FormControl(''),
-      assigned_to: new FormControl('')
-    });
-
-    this.loadingNewTaskForm = false;
+    // I'm not sure why but the taskDetails is not null when the modal is opened, Set timeout seems to fix it
+    setTimeout(() => {
+      this.newTask = true;
+      this.taskDetails = null;
+      this.activeListUuId = uuid;
+      this.loadingTaskDetails = false;
+    }, 10);
   }
 
   loadWorkspaceMembers() {
     this.workspaceMembersService.getWorkspaceMembers(this.activeWorkspace.uuid).pipe(untilDestroyed(this)).subscribe({
       next: (members) => {
         this.workspaceMembers = members;
-      }
-    });
-  }
-
-  submitNewTask() {
-    this.savingNewTask = true;
-    this.taskService.createTask(this.activeWorkspace.uuid, this.boardUuid, this.activeListUuId, this.newTaskForm.value).pipe(untilDestroyed(this)).subscribe({
-      next: () => {
-        this.toastrService.success('Task created successfully');
-        this.loadBoardListsAndTasks();
-        this.closeNewTaskModalBtn.nativeElement.click();
-        this.savingNewTask = false;
-      },
-      error: (err) => {
-        this.toastrService.error(err.error.message);
-        this.savingNewTask = false;
       }
     });
   }
@@ -244,51 +217,18 @@ export class BoardDetailsComponent implements OnInit {
     });
   }
 
-  loadTaskDetails(taskUuId: string) {
+  editTaskClick(taskUuId: string) {
+    this.newTask = false;
     this.taskDetails = null;
     this.loadingTaskDetails = true;
     this.taskService.taskDetails(taskUuId).pipe(untilDestroyed(this)).subscribe({
       next: (task) => {
-
         this.taskDetails = task;
-        this.initTaskDetailsForm();
-        this.taskMarkdownText = this.taskDetails.description;
         this.loadingTaskDetails = false;
       },
       error: (err) => {
         this.toastrService.error(err.error.message);
         this.loadingTaskDetails = false;
-      }
-    });
-  }
-
-  initTaskDetailsForm() {
-    this.loadWorkspaceMembers();
-    if (this.taskDetails !== null) {
-      this.taskDetailsForm = new FormGroup({
-        name: new FormControl(this.taskDetails.name),
-        description: new FormControl(this.taskDetails.description),
-        assigned_to: new FormControl(this.taskDetails.assigned_to.uuid)
-      });
-    }
-  }
-
-  submitTaskDetails() {
-    this.savingTaskDetails = true;
-    if (this.taskDetails === null) {
-      this.toastrService.error('Failed to save task, An active task was not detected');
-      return;
-    }
-
-    this.taskService.updateTask(this.taskDetails?.uuid, this.taskDetailsForm.value).pipe(untilDestroyed(this)).subscribe({
-      next: () => {
-        this.toastrService.success('Task updated successfully');
-        this.savingTaskDetails = false;
-        this.loadBoardListsAndTasks();
-      },
-      error: (err: any) => {
-        this.toastrService.error(err.error.message);
-        this.savingTaskDetails = false;
       }
     });
   }
@@ -379,36 +319,18 @@ export class BoardDetailsComponent implements OnInit {
     });
   }
 
-  deleteTask(uuid: string | undefined) {
-    if (typeof uuid === 'undefined') {
-      this.toastrService.error('Failed to delete task, Please try again');
-      return;
-    }
-    this.taskService.deleteTask(uuid).pipe(untilDestroyed(this)).subscribe({
-      next: () => {
-        this.toastrService.success('Task deleted');
-
-        // Reload all the tasks
-        this.loadBoardListsAndTasks();
-
-        // Close the task details modal
-        this.closeTaskDetailsModal.nativeElement.click();
-      },
-      error: (err) => {
-        this.toastrService.error(err.error.message);
-      }
-    })
+  taskCreated() {
+    this.loadBoardListsAndTasks();
+    this.closeTaskModal.nativeElement.click();
   }
 
-  upDateTaskMarkdownPreviewText() {
-    if(!this.taskDetailsForm) {
-      return;
-    }
-    this.taskMarkdownText = this.taskDetailsForm.get('description')?.value;
-
+  taskUpdated() {
+    this.loadBoardListsAndTasks();
+    this.closeTaskModal.nativeElement.click();
   }
 
-  toggleTaskDescriptionEditBox() {
-    this.taskDescriptionEditBox = !this.taskDescriptionEditBox;
+  taskDeleted() {
+    this.loadBoardListsAndTasks();
+    this.closeTaskModal.nativeElement.click();
   }
 }

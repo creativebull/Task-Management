@@ -30,7 +30,7 @@ import {MarkdownModule, MarkedOptions} from 'ngx-markdown';
     ToastrModule.forRoot(),
     SweetAlert2Module.forRoot({
       // Add custom options into swal globally
-      provideSwal: () => import('sweetalert2').then(({ default: swal }) => swal.mixin(
+      provideSwal: () => import('sweetalert2').then(({default: swal}) => swal.mixin(
         {
           // Use bootstrap 4 buttons
           customClass: {
@@ -55,7 +55,7 @@ import {MarkdownModule, MarkedOptions} from 'ngx-markdown';
       },
     }),
     UserModule,
-    AppRoutingModule
+    AppRoutingModule,
   ],
   providers: [
     AuthGuard,
