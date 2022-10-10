@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {UserPermissionService} from '../../../../services/user-permission.service';
-import {PageSetting} from '../../interface/page-setting';
+import {PageSetting} from '../../../../models/page-setting.model';
 import {Breadcrumb} from '../../../../models/breadcrumb.model';
 
 @Component({
