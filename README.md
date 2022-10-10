@@ -1,9 +1,16 @@
-# get-it-done
-A Task manager written in Laravel and Angular
+# Task Manager
 
-This project is currently being created, Please check back for updates
+## Technology
+- Laravel (Backend)
+- Angular (Frontend)
+- MySQL   (Database)
 
-To get this project up and running 
+## Structure
+
+- Dashboard
+- Boards
+- Workspaces
+- Settings
 
 # For the backend
 Set up a local dev server that is compatible with Laravel
@@ -11,11 +18,19 @@ Do a ```composer install``` inside the backend directory
 Create the database with ```php artisan migrate:fresh``` (The settings are found in .env file, If it doesn't exist create it from [file](backend/.env.example))
 
 # For the frontend
-```cd frontend``` 
 
-```npm install```
+## Environment 
 
-```ng serve```
+- Angular CLI Version: 14.2.1
+- Angular Core Version: 14.2.1
+- Default Port: 4200
 
-You may find that it complains about incompatible packages, If so use ```npm install --legacy-peer-deps```
-
+**Commands**
+- run: 
+```bash
+bash bin/env_setup && . $HOME/.nvm/nvm.sh && npm start
+```
+- install: 
+```bash
+bash bin/env_setup && . $HOME/.nvm/nvm.sh && npm install
+```
