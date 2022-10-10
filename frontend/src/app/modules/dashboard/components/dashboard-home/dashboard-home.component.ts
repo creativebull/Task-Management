@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {Breadcrumb} from '../../../../models/breadcrumb';
+import {Breadcrumb} from '../../../../models/breadcrumb.model';
 
 @Component({
   selector: 'app-dashboard-home',

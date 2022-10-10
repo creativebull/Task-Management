@@ -5,15 +5,15 @@ import {TasksService} from '../../../../services/tasks.service';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {ToastrService} from 'ngx-toastr';
 import {SortableOptions} from 'sortablejs';
-import {Breadcrumb} from '../../../../models/breadcrumb';
+import {Breadcrumb} from '../../../../models/breadcrumb.model';
 import {BoardListService} from '../../../../services/board-list.service';
 import {WorkspaceMembersService} from '../../../../services/workspace-members.service';
 import {FormControl, FormGroup} from '@angular/forms';
-import {BoardList} from '../../../../models/board-list';
-import {WorkspaceMember} from '../../../../models/workspace-member';
-import {Board} from '../../../../models/board';
+import {BoardList} from '../../../../models/board-list.model';
+import {WorkspaceMember} from '../../../../models/workspace-member.model';
+import {Board} from '../../../../models/board.model';
 import {BoardService} from '../../../../services/board.service';
-import {TaskDetailsFull} from '../../../../models/task-details-full';
+import {TaskDetailsFull} from '../../../../models/task-details-full.model';
 
 @UntilDestroy()
 @Component({

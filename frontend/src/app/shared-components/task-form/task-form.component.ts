@@ -1,13 +1,13 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {TaskDetailsFull} from '../../models/task-details-full';
+import {TaskDetailsFull} from '../../models/task-details-full.model';
 import {FormControl, FormGroup} from '@angular/forms';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {TasksService} from '../../services/tasks.service';
 import {WorkspaceMembersService} from '../../services/workspace-members.service';
-import {WorkspaceMember} from '../../models/workspace-member';
+import {WorkspaceMember} from '../../models/workspace-member.model';
 import {WorkspaceService} from '../../services/workspace.service';
-import {Task} from '../../models/task';
-import {Board} from '../../models/board';
+import {Task} from '../../models/task.model';
+import {Board} from '../../models/board.model';
 
 @UntilDestroy()
 @Component({

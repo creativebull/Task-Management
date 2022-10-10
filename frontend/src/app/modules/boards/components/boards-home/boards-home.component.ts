@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {BoardService} from '../../../../services/board.service';
-import {Workspace} from '../../../../models/workspace';
+import {Workspace} from '../../../../models/workspace.model';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {WorkspaceService} from '../../../../services/workspace.service';
-import {Board} from '../../../../models/board';
-import {Breadcrumb} from '../../../../models/breadcrumb';
+import {Board} from '../../../../models/board.model';
+import {Breadcrumb} from '../../../../models/breadcrumb.model';
 import {environment} from '../../../../../environments/environment';
 import {ToastrService} from 'ngx-toastr';
 

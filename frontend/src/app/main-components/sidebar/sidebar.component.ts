@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {environment} from '../../../environments/environment';
 import {WorkspaceService} from '../../services/workspace.service';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {Workspace} from '../../models/workspace';
+import {Workspace} from '../../models/workspace.model';
 import {Router} from '@angular/router';
 
 @UntilDestroy()

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {Breadcrumb} from '../../../../models/breadcrumb';
-import {Board} from '../../../../models/board';
+import {Breadcrumb} from '../../../../models/breadcrumb.model';
+import {Board} from '../../../../models/board.model';
 import {ToastrService} from 'ngx-toastr';
 import {Router} from '@angular/router';
 

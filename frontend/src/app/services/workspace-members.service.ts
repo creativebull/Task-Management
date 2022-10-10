@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
-import {WorkspaceMember} from '../models/workspace-member';
+import {WorkspaceMember} from '../models/workspace-member.model';
 import {Observable} from 'rxjs';
 
 @Injectable({

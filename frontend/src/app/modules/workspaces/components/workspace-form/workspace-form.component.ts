@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {Workspace} from '../../../../models/workspace';
+import {Workspace} from '../../../../models/workspace.model';
 import {WorkspaceService} from '../../../../services/workspace.service';
 import {LaravelErrorExtractorService} from '../../../../services/laravel-error-extractor.service';
 import {ToastrService} from 'ngx-toastr';

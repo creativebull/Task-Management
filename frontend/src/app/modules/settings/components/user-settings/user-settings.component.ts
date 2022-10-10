@@ -2,11 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../../../../services/auth.service';
 import {ToastrService} from 'ngx-toastr';
-import {User} from '../../../../models/user';
+import {User} from '../../../../models/user.model';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {environment} from '../../../../../environments/environment';
 import {LaravelErrorExtractorService} from '../../../../services/laravel-error-extractor.service';
-import {Breadcrumb} from '../../../../models/breadcrumb';
+import {Breadcrumb} from '../../../../models/breadcrumb.model';
 import {FileService} from '../../../../services/file.service';
 import {ImageService} from '../../../../services/image.service';
 

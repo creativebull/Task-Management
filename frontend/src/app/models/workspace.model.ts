@@ -1,4 +1,4 @@
-import {WorkspaceUser} from './workspace-user';
+import {WorkspaceUser} from './workspace-user.model';
 
 export interface Workspace {
   uuid: string;
