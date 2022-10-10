@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {WorkspaceService} from '../../../../services/workspace.service';
-import {Workspace} from '../../../../interfaces/workspace';
+import {Workspace} from '../../../../models/workspace';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {Breadcrumb} from '../../../../interfaces/breadcrumb';
+import {Breadcrumb} from '../../../../models/breadcrumb';
 import {ToastrService} from 'ngx-toastr';
 
 @UntilDestroy()

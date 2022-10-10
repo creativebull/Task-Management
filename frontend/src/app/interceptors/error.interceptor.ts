@@ -30,27 +30,6 @@ export class ErrorInterceptor implements HttpInterceptor {
         }
 
         return throwError(err);
-
-        // const errorInfo = {
-        //   status: err.status,
-        //   output: err.message,
-        //   name: err.name,
-        //   url: req.urlWithParams,
-        //   body: req.body,
-        //   headers: req.headers,
-        //   method: req.method
-        // };
-        //
-        // const errorSub = this.http.post(environment.apiUrl + '/errors/report_error', errorInfo).subscribe(() => {
-        //   console.warn('Error reported');
-        // }, error1 => {
-        //   console.warn('Failed to log error');
-        //   console.error(error1);
-        // }, () => {
-        //   errorSub.unsubscribe();
-        // });
-        // console.error(err);
-        // return throwError(err);
       }));
   }
 }

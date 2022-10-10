@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {Workspace} from '../../../../interfaces/workspace';
-import {Breadcrumb} from '../../../../interfaces/breadcrumb';
+import {Workspace} from '../../../../models/workspace';
+import {Breadcrumb} from '../../../../models/breadcrumb';
 import {WorkspaceService} from '../../../../services/workspace.service';
 import {ToastrService} from 'ngx-toastr';
 import {Router} from '@angular/router';

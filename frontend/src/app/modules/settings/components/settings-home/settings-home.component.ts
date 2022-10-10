@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {UserPermissionService} from '../../../../services/user-permission.service';
 import {PageSetting} from '../../interface/page-setting';
-import {Breadcrumb} from '../../../../interfaces/breadcrumb';
+import {Breadcrumb} from '../../../../models/breadcrumb';
 
 @Component({
   selector: 'app-settings-home',

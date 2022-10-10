@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {Breadcrumb} from '../../../../interfaces/breadcrumb';
-import {Workspace} from '../../../../interfaces/workspace';
+import {Breadcrumb} from '../../../../models/breadcrumb';
+import {Workspace} from '../../../../models/workspace';
 import {ActivatedRoute, Router} from '@angular/router';
 import {WorkspaceService} from '../../../../services/workspace.service';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';

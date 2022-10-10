@@ -1,9 +1,9 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Board} from '../../../../interfaces/board';
+import {Board} from '../../../../models/board';
 import {BoardService} from '../../../../services/board.service';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {WorkspaceService} from '../../../../services/workspace.service';
-import {Workspace} from '../../../../interfaces/workspace';
+import {Workspace} from '../../../../models/workspace';
 import {ToastrService} from 'ngx-toastr';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {LaravelErrorExtractorService} from '../../../../services/laravel-error-extractor.service';

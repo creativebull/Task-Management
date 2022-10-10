@@ -4,8 +4,8 @@ import {Observable, ReplaySubject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {take} from 'rxjs/operators';
-import {LoggedInUser} from '../interfaces/logged-in-user';
-import {User} from '../interfaces/user';
+import {LoggedInUser} from '../models/logged-in-user';
+import {User} from '../models/user';
 
 @Injectable({
   providedIn: 'root'

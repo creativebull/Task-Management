@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Breadcrumb} from '../../interfaces/breadcrumb';
+import {Breadcrumb} from '../../models/breadcrumb';
 import {Title} from '@angular/platform-browser';
 import {environment} from '../../../environments/environment';
 

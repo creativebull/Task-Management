@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {Observable} from 'rxjs';
-import {BoardList} from '../interfaces/board-list';
+import {BoardList} from '../models/board-list';
 
 @Injectable({
   providedIn: 'root'
