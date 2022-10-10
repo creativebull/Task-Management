@@ -24,24 +24,24 @@ export class TaskFormComponent implements OnInit {
   @Output() taskCreated: EventEmitter<Task> = new EventEmitter<Task>();
   @Output() taskDeleted: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  savingTaskDetails = false;
+  savingTaskDetails: boolean;
   taskDetailsForm!: FormGroup;
-  loadingTaskDetailsForm = true;
+  loadingTaskDetailsForm: boolean;
   taskMarkdownText!: string;
-
-  taskDescriptionEditBox: boolean = false;
-
+  taskDescriptionEditBox: boolean;
   workspaceMembers?: WorkspaceMember[];
-
   activeWorkspace: any;
-
-  errors: string[] = [];
+  errors: string[];
 
   constructor(
     private taskService: TasksService,
     private workspaceMembersService: WorkspaceMembersService,
     private workspaceService: WorkspaceService
   ) {
+    this.savingTaskDetails = false;
+    this.loadingTaskDetailsForm = true;
+    this.taskDescriptionEditBox = false;
+    this.errors = [];
   }
 
   ngOnInit(): void {
@@ -58,7 +58,6 @@ export class TaskFormComponent implements OnInit {
 
     if (this.taskDetails === null) {
       this.taskDetails = {} as TaskDetailsFull;
-      // If we are creating a new task, Show the edit box
       this.taskDescriptionEditBox = true;
     }
 

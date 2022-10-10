@@ -4,7 +4,6 @@ import { BoardsHomeComponent } from './components/boards-home/boards-home.compon
 import {SharedModule} from '../shared/shared.module';
 import {CommonModule} from '@angular/common';
 import { CreateBoardComponent } from './components/create-board/create-board.component';
-import { UpdateBoardComponent } from './components/update-board/update-board.component';
 import { BoardFormComponent } from './components/board-form/board-form.component';
 import { BoardDetailsComponent } from './components/board-details/board-details.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -26,7 +25,6 @@ import {MarkdownModule} from 'ngx-markdown';
   declarations: [
     BoardsHomeComponent,
     CreateBoardComponent,
-    UpdateBoardComponent,
     BoardFormComponent,
     BoardDetailsComponent
   ]

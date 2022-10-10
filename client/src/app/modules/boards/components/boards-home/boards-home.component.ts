@@ -19,17 +19,20 @@ export class BoardsHomeComponent implements OnInit {
   apiUrl = environment.apiUrl;
 
   activeWorkspace?: Workspace;
-  boards: Board[] = [];
-  breadCrumbs: Breadcrumb[] = [
-    {linkText: 'Home', routeItems: ['/']},
-    {linkText: 'Boards', routeItems: []}
-  ];
+  boards: Board[];
+  breadCrumbs: Breadcrumb[];
   loading = true;
 
   constructor(
     private boardService: BoardService,
     private workspaceService: WorkspaceService,
     private toastrService: ToastrService) {
+      this.boards = [];
+      this.breadCrumbs = [
+        {linkText: 'Home', routeItems: ['/']},
+        {linkText: 'Boards', routeItems: []}
+      ];
+      this.loading = true;
   }
 
   ngOnInit(): void {

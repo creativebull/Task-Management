@@ -15,24 +15,22 @@ import {LaravelErrorExtractorService} from '../../../../services/laravel-error-e
   styleUrls: ['./board-form.component.scss']
 })
 export class BoardFormComponent implements OnInit {
-
   @Input() board?: Board;
   @Output() boardCreated: EventEmitter<Board> = new EventEmitter<Board>();
   @Output() boardUpdated: EventEmitter<Board> = new EventEmitter<Board>();
 
   activeWorkspace!: Workspace;
-
-  loading = true;
-  saving = false;
-
+  loading: boolean;
+  saving: boolean;
   imageSource: any;
-
   boardForm!: FormGroup;
 
   constructor(
     private boardService: BoardService,
     private workspaceService: WorkspaceService,
     private toastr: ToastrService) {
+      this.loading = true;
+      this.saving = false;
   }
 
   ngOnInit(): void {

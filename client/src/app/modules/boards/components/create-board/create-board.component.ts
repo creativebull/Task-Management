@@ -10,12 +10,15 @@ import {Router} from '@angular/router';
   styleUrls: ['./create-board.component.scss']
 })
 export class CreateBoardComponent implements OnInit {
-  breadCrumbs: Breadcrumb[] = [
-    {linkText: 'Home', routeItems: ['/']},
-    {linkText: 'Boards', routeItems: ['/boards']},
-    {linkText: 'Create Board', routeItems: []},
-  ];
-  constructor(private toastr: ToastrService, private router: Router) { }
+  breadCrumbs: Breadcrumb[];
+  
+  constructor(private toastr: ToastrService, private router: Router) {
+    this.breadCrumbs = [
+      {linkText: 'Home', routeItems: ['/']},
+      {linkText: 'Boards', routeItems: ['/boards']},
+      {linkText: 'Create Board', routeItems: []},
+    ];
+  }
 
   ngOnInit(): void {
   }
